@@ -6,6 +6,7 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         mavenCentral()
         maven {
+            allowInsecureProtocol = true
             url 'http://4thline.org/m2'
         }
     }
@@ -23,6 +24,7 @@ allprojects {
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
         mavenCentral()
         maven {
+            allowInsecureProtocol = true
             url 'http://4thline.org/m2'
         }
     }

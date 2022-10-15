@@ -12,7 +12,7 @@ import my.project.silisili.application.Silisili;
 import my.project.silisili.bean.HomeWekBean;
 import my.project.silisili.util.Utils;
 
-public class FragmentAdapter extends BaseQuickAdapter<HomeWekBean,BaseViewHolder> {
+public class FragmentAdapter extends BaseQuickAdapter<HomeWekBean, BaseViewHolder> {
     private Context context;
 
     public FragmentAdapter(Context context, List<HomeWekBean> data) {
@@ -22,8 +22,9 @@ public class FragmentAdapter extends BaseQuickAdapter<HomeWekBean,BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, HomeWekBean item) {
-        Utils.setDefaultImage(context, item.getImg().startsWith("http") ? item.getImg() : Silisili.DOMAIN + item.getImg(),helper.getView(R.id.img), true, helper.getView(R.id.card_view), helper.getView(R.id.title));
+        Utils.setDefaultImage(context, item.getImg().startsWith("http") ? item.getImg() : Silisili.DOMAIN + item.getImg(), helper.getView(R.id.img), true, helper.getView(R.id.card_view), helper.getView(R.id.title));
         helper.setText(R.id.title, item.getTitle());
+        helper.setText(R.id.date, item.getDate());
         helper.setText(R.id.drama, item.getDrama());
         if (item.isHasNew()) helper.setVisible(R.id.new_view, true);
         else helper.setVisible(R.id.new_view, false);

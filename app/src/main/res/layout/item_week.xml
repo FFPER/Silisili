@@ -1,89 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:id="@+id/card_view"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_gravity="center"
-android:layout_marginLeft="4dp"
-android:layout_marginTop="6dp"
-android:layout_marginRight="4dp"
-android:layout_marginBottom="2dp"
-android:foreground="?android:attr/selectableItemBackground"
-app:cardBackgroundColor="@color/window_bg"
-app:cardCornerRadius="4dp"
-app:cardElevation="4dp"
-app:cardUseCompatPadding="false">
-
-<RelativeLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="4dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginBottom="2dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/window_bg"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="false">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/img_box"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/img"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="W,1.4:1"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:scaleType="centerCrop"
-            android:transitionName="sharedImg" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/img_box"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:transitionName="sharedImg"
+                app:layout_constraintDimensionRatio="W,1.4:1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/new_view"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_margin="4dp"
-        android:background="@drawable/text_view_new"
-        android:paddingLeft="2dp"
-        android:paddingRight="2dp"
-        android:gravity="center_vertical"
-        android:text="NEW"
-        android:textStyle="bold"
-        android:textSize="12sp"
-        android:textColor="@color/white" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/img_box"
-        android:layout_centerVertical="true"
-        android:background="@drawable/week_item_gradient"
-        android:orientation="vertical">
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/drama"
+            android:id="@+id/new_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="4dp"
+            android:background="@drawable/text_view_new"
+            android:gravity="center_vertical"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:text="NEW"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:layout_alignBottom="@+id/img_box"
+            android:layout_centerVertical="true"
+            android:background="@drawable/week_item_gradient"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/date"
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:padding="2dp"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                tools:text="10-15" />
+
+            <TextView
+                android:id="@+id/drama"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:maxLines="1"
+                android:padding="2dp"
+                android:textColor="#f3f3f3"
+                android:textSize="12sp"
+                tools:text="更新至13话" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_box"
             android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="2dp"
-            android:textSize="12sp"
-            android:textColor="#f3f3f3" />
+            android:maxLines="2"
+            android:padding="5dp"
+            android:textColor="@color/text_color_primary"
+            android:textSize="14sp"
+            tools:text="西游记" />
 
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_below="@+id/img_box"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:padding="5dp"
-        android:textColor="@color/text_color_primary"
-        android:textSize="14sp" />
-
-</RelativeLayout>
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

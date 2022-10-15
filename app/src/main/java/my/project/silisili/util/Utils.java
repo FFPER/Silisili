@@ -15,6 +15,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.DisplayMetrics;
@@ -41,10 +42,14 @@ import androidx.cardview.widget.CardView;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory;
 import com.bumptech.glide.request.transition.Transition;
 import com.fanchen.sniffing.SniffingVideo;
@@ -60,6 +65,7 @@ import java.util.List;
 import my.project.silisili.BuildConfig;
 import my.project.silisili.R;
 import my.project.silisili.application.Silisili;
+import my.project.silisili.net.GlideApp;
 
 public class Utils {
     private static Context context;
@@ -379,13 +385,24 @@ public class Utils {
                 .format(DecodeFormat.PREFER_RGB_565)
                 .placeholder((Boolean) SharedPreferencesUtils.getParam(getContext(), "darkTheme", false) ? R.drawable.loading_night : R.drawable.loading_light)
                 .error(R.drawable.error);
-        Glide.with(context)
+        GlideApp.with(context)
                 .load(url)
                 .transition(DrawableTransitionOptions.withCrossFade(drawableCrossFadeFactory))
-                .apply(options)
+                .apply(options).addListener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                      e.printStackTrace();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        return false;
+                    }
+                })
                 .into(imageView);
         if (setPalette) // 设置Palette
-            Glide.with(context).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
+            GlideApp.with(context).asBitmap().load(url).into(new SimpleTarget<Bitmap>() {
                 @Override
                 public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                     Palette.from(resource).generate(palette -> {

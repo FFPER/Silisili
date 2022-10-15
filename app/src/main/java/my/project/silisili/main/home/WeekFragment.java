@@ -120,7 +120,8 @@ public class WeekFragment extends LazyFragment {
                             object.getString("img"),
                             object.getString("url"),
                             object.getString("drama"),
-                            object.getBoolean("new")));
+                            object.getBoolean("new"),
+                            object.getString("date")));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

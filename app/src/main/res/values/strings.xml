@@ -86,7 +86,8 @@
     <string name="player">视频播放器</string>
     <string name="player_default">内置</string>
     <string name="domain">域名设置 (备用)</string>
-    <string name="domain_url">http://www.silisili.in</string>
+    <string name="domain_url">http://www.silisili.tv</string>
+<!--    <string name="domain_url">http://www.silisili.in</string>-->
     <string name="search_title">检索方式</string>
     <string name="set_light_theme">切至亮色主题</string>
     <string name="set_dark_theme">切至暗色主题</string>
@@ -184,6 +185,7 @@
         <item>周五</item>
         <item>周六</item>
         <item>周日</item>
+<!--        <item>最近</item>-->
     </string-array>
     <string-array name="prefix">
         <item>http://</item>

@@ -60,6 +60,7 @@ import my.project.silisili.main.animelist.AnimeListActivity;
 import my.project.silisili.main.base.BaseActivity;
 import my.project.silisili.main.video.VideoContract;
 import my.project.silisili.main.video.VideoPresenter;
+import my.project.silisili.net.GlideApp;
 import my.project.silisili.util.StatusBarUtil;
 import my.project.silisili.util.SwipeBackLayoutUtil;
 import my.project.silisili.util.Utils;
@@ -356,7 +357,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 .format(DecodeFormat.PREFER_RGB_565)
                 .placeholder(isDarkTheme ? R.drawable.loading_night : R.drawable.loading_light)
                 .error(R.drawable.error);
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(animeDescHeaderBean.getImg())
                 .transition(DrawableTransitionOptions.withCrossFade(drawableCrossFadeFactory))
                 .apply(options)
