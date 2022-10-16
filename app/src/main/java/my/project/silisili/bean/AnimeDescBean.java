@@ -26,8 +26,14 @@ public class AnimeDescBean implements Serializable {
         return animeDescDetailsBeans;
     }
 
-    public List<AnimeDescDetailsBean> getAnimeDescDetailsBeans() {
-        return animeDescDetailsBeans.get("NO.T");
+    public String[] getAnimeDescDetailsKey() {
+        String[] keys = new String[this.animeDescDetailsBeans.size()];
+        return animeDescDetailsBeans.keySet().toArray(new String[0]);
+    }
+
+
+    public List<AnimeDescDetailsBean> getAnimeDescDetailsBeans(String key) {
+        return animeDescDetailsBeans.containsKey(key) ? animeDescDetailsBeans.get(key) : new ArrayList<>();
     }
 
     public void setAnimeDescDetailsBeans(Map<String, List<AnimeDescDetailsBean>> animeDescDetailsBeans) {

@@ -24,6 +24,11 @@ public class AnimeDescDetailsAdapter extends BaseQuickAdapter<AnimeDescDetailsBe
         this.context = context;
     }
 
+    public AnimeDescDetailsAdapter(Context context) {
+        super(R.layout.item_desc_details);
+        this.context = context;
+    }
+
     @Override
     protected void convert(final BaseViewHolder helper, AnimeDescDetailsBean item) {
         MaterialButton materialButton = helper.getView(R.id.tag_group);

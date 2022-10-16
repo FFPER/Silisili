@@ -591,4 +591,14 @@ public class Utils {
         }
         return urls;
     }
+
+    public static int screenWidth(Context context){
+        DisplayMetrics dm = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        if (wm != null){
+            wm.getDefaultDisplay().getMetrics(dm);
+            return dm.widthPixels;
+        }
+        return 1080;
+    }
 }

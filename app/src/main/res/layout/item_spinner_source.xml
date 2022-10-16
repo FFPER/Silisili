@@ -1,0 +1,12 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/text1"
+    style="@style/itemSpinnerStyle"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/listPreferredItemHeight"
+    android:ellipsize="marquee"
+    android:gravity="start|center_vertical"
+    android:paddingStart="@dimen/dp_10"
+    android:paddingEnd="0dp"
+    android:singleLine="true"
+    tools:text="AAA" />

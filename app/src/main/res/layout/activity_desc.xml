@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/window_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/window_bg">
 
     <ImageView
         android:id="@+id/bg"
-        android:src="@drawable/default_bg"
-        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/default_bg" />
 
     <View
         android:layout_width="match_parent"
@@ -48,19 +47,19 @@
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:clipChildren="true"
-                android:layout_marginTop="?attr/actionBarSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="?attr/actionBarSize"
+                android:clipChildren="true"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/desc_view"
-                    android:visibility="visible"
                     android:layout_width="match_parent"
-                    android:clipChildren="false"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:clipChildren="false"
+                    android:orientation="vertical"
+                    android:visibility="visible">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/img_box"
@@ -84,12 +83,12 @@
                             app:cardBackgroundColor="@android:color/transparent"
                             app:cardCornerRadius="4dp"
                             app:cardElevation="4dp"
-                            app:layout_constraintDimensionRatio="W,1:1.4"
+                            app:cardUseCompatPadding="false"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="W,1:1.4"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:cardUseCompatPadding="false">
+                            app:layout_constraintTop_toTopOf="parent">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -112,32 +111,32 @@
                         android:layout_height="wrap_content">
 
                         <my.project.silisili.custom.MyTextView
+                            android:id="@+id/title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:id="@+id/title"
-                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginRight="20dp"
-                            android:gravity="center_horizontal"
+                            android:ellipsize="marquee"
                             android:focusable="true"
                             android:focusableInTouchMode="true"
+                            android:gravity="center_horizontal"
                             android:marqueeRepeatLimit="marquee_forever"
-                            android:ellipsize="marquee"
                             android:scrollHorizontally="true"
-                            android:singleLine="true"
-                            android:textStyle="bold"
                             android:shadowColor="@color/light_toolbar_color_lt23"
                             android:shadowDx="1.0"
                             android:shadowDy="1.0"
                             android:shadowRadius="2.0"
+                            android:singleLine="true"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
                         <LinearLayout
                             android:id="@+id/btn_view"
-                            android:layout_below="@id/title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_below="@id/title"
                             android:layout_centerHorizontal="true"
                             android:orientation="horizontal">
 
@@ -146,74 +145,74 @@
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="14sp"
-                                app:strokeColor="@color/mtrl_btn_stroke_color_selector"
                                 android:textColor="@color/white"
-                                app:iconTint="@color/white"/>
+                                android:textSize="14sp"
+                                app:iconTint="@color/white"
+                                app:strokeColor="@color/mtrl_btn_stroke_color_selector" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/down"
-                                android:visibility="gone"
-                                android:layout_marginLeft="5dp"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="14sp"
-                                app:icon="@drawable/baseline_down_white_48dp"
+                                android:layout_marginLeft="5dp"
                                 android:text="@string/down"
-                                app:strokeColor="@color/mtrl_btn_stroke_color_selector"
                                 android:textColor="@color/white"
-                                app:iconTint="@color/white"/>
+                                android:textSize="14sp"
+                                android:visibility="gone"
+                                app:icon="@drawable/baseline_down_white_48dp"
+                                app:iconTint="@color/white"
+                                app:strokeColor="@color/mtrl_btn_stroke_color_selector" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/browser"
-                                android:layout_marginLeft="5dp"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="5dp"
+                                android:text="@string/open_browser"
+                                android:textColor="@color/white"
                                 android:textSize="14sp"
                                 app:icon="@drawable/baseline_language_white_48dp"
-                                android:text="@string/open_browser"
-                                app:strokeColor="@color/mtrl_btn_stroke_color_selector"
-                                android:textColor="@color/white"
-                                app:iconTint="@color/white"/>
+                                app:iconTint="@color/white"
+                                app:strokeColor="@color/mtrl_btn_stroke_color_selector" />
 
                         </LinearLayout>
 
                         <co.lujun.androidtagview.TagContainerLayout
-                            android:layout_below="@+id/btn_view"
                             android:id="@+id/tag_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_below="@+id/btn_view"
                             android:layout_marginTop="5dp"
-                            app:container_border_color="@color/translucent"
                             app:container_background_color="@color/translucent"
-                            app:tag_corner_radius="4dp"
+                            app:container_border_color="@color/translucent"
                             app:container_gravity="center"
-                            app:tag_text_color="@color/white"
-                            app:tag_border_color="#73e55578"
                             app:tag_background_color="#73e55578"
+                            app:tag_border_color="#73e55578"
                             app:tag_clickable="true"
+                            app:tag_corner_radius="4dp"
                             app:tag_horizontal_padding="10dp"
-                            app:tag_theme="none"/>
+                            app:tag_text_color="@color/white"
+                            app:tag_theme="none" />
 
                         <com.ctetin.expandabletextviewlibrary.ExpandableTextView
                             android:id="@+id/desc"
-                            android:layout_below="@id/tag_view"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:ep_need_link="false"
-                            app:ep_need_mention="true"
-                            app:ep_max_line="4"
+                            android:layout_below="@id/tag_view"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginRight="10dp"
                             android:lineSpacingExtra="4dp"
-                            app:ep_need_contract="true"
-                            app:ep_need_animation="true"
-                            app:ep_expand_color="@color/colorAccent"
                             android:textColor="@color/white"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            app:ep_expand_color="@color/colorAccent"
+                            app:ep_max_line="4"
+                            app:ep_need_animation="true"
+                            app:ep_need_contract="true"
+                            app:ep_need_link="false"
+                            app:ep_need_mention="true" />
 
                     </RelativeLayout>
 
@@ -225,26 +224,54 @@
                     android:id="@+id/play_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginTop="10dp"
+                    android:orientation="vertical"
                     android:padding="5dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="start|center_vertical"
+                        android:orientation="horizontal">
+                        <!--片源-->
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:text="片源"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/selected_resource"
+                            style="@style/common_spinner"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:popupTheme="@style/common_spinner"
+                            android:spinnerMode="dropdown"
+                            app:theme="@style/common_spinner" />
+                    </LinearLayout>
+                    /
+                    <!--选集-->
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_centerVertical="true"
                             android:id="@+id/selected_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_marginLeft="8dp"
                             android:text="选集"
-                            android:textSize="16sp"
                             android:textColor="@color/white"
-                            android:textStyle="bold"/>
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                     </RelativeLayout>
 
@@ -274,15 +301,15 @@
                             android:layout_toRightOf="@id/drama"
                             android:scaleType="centerInside"
                             android:src="@drawable/ic_keyboard_arrow_down_white_48dp"
-                            android:tint="@color/white" />
+                            app:tint="@color/white" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/drama"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="展开全部"
-                            android:textStyle="bold"
-                            android:textColor="@color/colorAccent" />
+                            android:textColor="@color/colorAccent"
+                            android:textStyle="bold" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -302,9 +329,9 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginBottom="8dp"
                         android:text="相关推荐"
-                        android:textSize="16sp"
                         android:textColor="@color/white"
-                        android:textStyle="bold"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recommend_list"

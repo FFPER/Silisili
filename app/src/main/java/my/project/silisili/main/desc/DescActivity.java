@@ -2,15 +2,19 @@ package my.project.silisili.main.desc;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.icu.text.SymbolTable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
@@ -85,6 +89,10 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     LinearLayout recommendLinearLayout;
     @BindView(R.id.open_drama)
     RelativeLayout openDrama;
+    @BindView(R.id.selected_resource)
+    AppCompatSpinner sourceSpinner;// 数据源选择
+    String selectedSourceKey = "";
+    ArrayAdapter<String> spinnerAdapter;
     private RecyclerView lineRecyclerView;
     private AnimeDescDetailsAdapter animeDescDetailsAdapter;
     private AnimeDescRecommendAdapter animeDescRecommendAdapter;
@@ -148,6 +156,8 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         desc.setNeedExpend(true);
         getBundle();
         initSwipe();
+        //: 2022/10/16 增加片源选择
+        initSpinner();
         initAdapter();
         initTagClick();
     }
@@ -172,9 +182,39 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         mSwipe.setOnRefreshListener(() -> mPresenter.loadData(true));
     }
 
+    /**
+     * 初始化数据源选择器
+     */
+    public void initSpinner() {
+        //设置下拉框的宽度 为屏幕宽度
+        sourceSpinner.setDropDownWidth(Utils.screenWidth(this));
+        spinnerAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_source);
+        spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_source);
+        sourceSpinner.setAdapter(spinnerAdapter);
+        sourceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectKey = animeDescBeans.getAnimeDescDetailsKey()[position];
+                if (selectKey.equals(selectedSourceKey)) {
+                    return;
+                }
+
+                selectedSourceKey = selectKey;
+                animeDescDetailsAdapter.setNewData(animeDescBeans.getAnimeDescDetailsBeans(selectedSourceKey));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        // 来一个默认值
+//        selectedSourceKey = keys[0];
+    }
+
     @SuppressLint("RestrictedApi")
     public void initAdapter() {
-        animeDescDetailsAdapter = new AnimeDescDetailsAdapter(this, animeDescBeans.getAnimeDescDetailsBeans());
+        animeDescDetailsAdapter = new AnimeDescDetailsAdapter(this);
         animeDescDetailsAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (!Utils.isFastClick()) return;
             AnimeDescDetailsBean bean = (AnimeDescDetailsBean) adapter.getItem(position);
@@ -193,14 +233,15 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
             openAnimeDesc();
         });
         recommendRv.setLayoutManager(getLinearLayoutManager());
-        if (Utils.checkHasNavigationBar(this)) recommendRv.setPadding(0,0,0, Utils.getNavigationBarHeight(this));
+        if (Utils.checkHasNavigationBar(this))
+            recommendRv.setPadding(0, 0, 0, Utils.getNavigationBarHeight(this));
         recommendRv.setAdapter(animeDescRecommendAdapter);
         recommendRv.setNestedScrollingEnabled(false);
 
         View dramaView = LayoutInflater.from(this).inflate(R.layout.dialog_drama, null);
         lineRecyclerView = dramaView.findViewById(R.id.drama_list);
         lineRecyclerView.setLayoutManager(new GridLayoutManager(this, Utils.isPad() ? 8 : 4));
-        animeDescDramaAdapter = new AnimeDescDramaAdapter(this, animeDescBeans.getAnimeDescDetailsBeans());
+        animeDescDramaAdapter = new AnimeDescDramaAdapter(this, animeDescBeans.getAnimeDescDetailsBeans(selectedSourceKey));
         animeDescDramaAdapter.setOnItemClickListener((adapter, view, position) -> {
             if (!Utils.isFastClick()) return;
             mBottomSheetDialog.dismiss();
@@ -211,7 +252,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         mBottomSheetDialog = new BottomSheetDialog(this);
         mBottomSheetDialog.setContentView(dramaView);
         closeDrama = dramaView.findViewById(R.id.close_drama);
-        closeDrama.setOnClickListener(v-> mBottomSheetDialog.dismiss());
+        closeDrama.setOnClickListener(v -> mBottomSheetDialog.dismiss());
     }
 
     private void initTagClick() {
@@ -313,7 +354,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 Utils.selectVideoPlayer(this, animeUrl);
                 break;
         }*/
-        VideoUtils.openPlayer(true, this, witchTitle, animeUrl, animeTitle, dramaUrl, animeDescBeans.getAnimeDescDetailsBeans(), clickIndex);
+        VideoUtils.openPlayer(true, this, witchTitle, animeUrl, animeTitle, dramaUrl, animeDescBeans.getAnimeDescDetailsBeans(selectedSourceKey), clickIndex);
     }
 
 /*    @Override
@@ -333,7 +374,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 animeUrlList.remove(animeUrlList.size() - 1);
                 siliUrl = animeUrlList.get(animeUrlList.size() - 1);
                 openAnimeDesc();
-            } else  application.showSnackbarMsg(msg, Utils.getString(R.string.load_desc_info));
+            } else application.showSnackbarMsg(msg, Utils.getString(R.string.load_desc_info));
         }
     }
 
@@ -367,7 +408,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         if (animeDescHeaderBean.getTagTitles() != null) {
             tagContainerLayout.setTags(animeDescHeaderBean.getTagTitles());
             tagContainerLayout.setVisibility(View.VISIBLE);
-        }else
+        } else
             tagContainerLayout.setVisibility(View.GONE);
         tagContainerLayout.setVisibility(View.VISIBLE);
         if (animeDescHeaderBean.getDesc().isEmpty())
@@ -419,7 +460,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Override
     public void showEmptyVIew() {
         mSwipe.setRefreshing(true);
-        if ( favorite.isShown())
+        if (favorite.isShown())
             favorite.setVisibility(View.GONE);
         if (down.isShown())
             down.setVisibility(View.GONE);
@@ -457,13 +498,15 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                 playLinearLayout.setVisibility(View.VISIBLE);
                 recommendLinearLayout.setVisibility(View.VISIBLE);
                 this.animeDescBeans = bean;
-                if (bean.getAnimeDescDetailsBeans().size() > 4)
+                if (bean.getAnimeDescDetailsBeans(selectedSourceKey).size() > 4)
                     openDrama.setVisibility(View.VISIBLE);
                 else
                     openDrama.setVisibility(View.GONE);
-                animeDescDetailsAdapter.setNewData(bean.getAnimeDescDetailsBeans());
+                spinnerAdapter.addAll(bean.getAnimeDescDetailsKey());
+                sourceSpinner.setSelection(0);
+                animeDescDetailsAdapter.setNewData(bean.getAnimeDescDetailsBeans(selectedSourceKey));
                 animeDescRecommendAdapter.setNewData(bean.getAnimeDescRecommendBeans());
-                animeDescDramaAdapter.setNewData(bean.getAnimeDescDetailsBeans());
+                animeDescDramaAdapter.setNewData(bean.getAnimeDescDetailsBeans(selectedSourceKey));
             }
         });
     }
@@ -512,7 +555,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         runOnUiThread(() -> {
             Utils.cancelDialog(alertDialog);
 //            application.showToastMsg(Utils.getString(R.string.should_be_used_web));
-            VideoUtils.openPlayer(true, this, witchTitle, iframeUrl, animeTitle, dramaUrl, animeDescBeans.getAnimeDescDetailsBeans(), clickIndex);
+            VideoUtils.openPlayer(true, this, witchTitle, iframeUrl, animeTitle, dramaUrl, animeDescBeans.getAnimeDescDetailsBeans(selectedSourceKey), clickIndex);
         });
     }
 
@@ -545,7 +588,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Event event) {
         clickIndex = event.getClickIndex();
-        animeDescBeans.getAnimeDescDetailsBeans().get(clickIndex).setSelected(true);
+        animeDescBeans.getAnimeDescDetailsBeans(selectedSourceKey).get(clickIndex).setSelected(true);
         animeDescDetailsAdapter.notifyDataSetChanged();
         animeDescDramaAdapter.notifyDataSetChanged();
     }
