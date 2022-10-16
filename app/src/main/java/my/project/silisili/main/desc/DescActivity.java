@@ -502,6 +502,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
                     openDrama.setVisibility(View.VISIBLE);
                 else
                     openDrama.setVisibility(View.GONE);
+                spinnerAdapter.clear();
                 spinnerAdapter.addAll(bean.getAnimeDescDetailsKey());
                 sourceSpinner.setSelection(0);
                 animeDescDetailsAdapter.setNewData(bean.getAnimeDescDetailsBeans(selectedSourceKey));
