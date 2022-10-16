@@ -42,7 +42,7 @@ public class SearchModel implements SearchContract.Model {
         }else {
             // 第一次使用POST获取searchID
             Log.e("第一页POST", "GO" + title);
-            new HttpPost(Api.SEARCH_API,"show=title&tbname=movie&tempid=1&keyboard=" + title , new Callback() {
+            new HttpPost(Api.SEARCH_API,"wd=" + title , new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     callback.error(isMain, e.getMessage());
@@ -60,13 +60,14 @@ public class SearchModel implements SearchContract.Model {
     public void getSearchData(Response response, boolean isMain, SearchContract.LoadDataCallback callback) {
         try{
             Document body = Jsoup.parse(response.body().string());
-            Elements animeList = body.getElementsByClass("anime_list").select("dl");
+            Elements animeList = body.getElementsByClass("post-list").select("div.entry-container");
             if (animeList.size() > 0) {
                 if (isMain) {
-                    Elements pages = body.select("div.page > a");
+                    Elements pages = body.select("ul.list-page > li > a");
                     if (pages.size() > 0) {
-                        String page = pages.get(0).select("a").text().replaceAll(" ", "").replaceAll("下一页尾页", "");
-                        page = page.substring(page.length() - 1);
+                        // 现在无法知道页码
+                        String page ="50";// pages.get(0).select("a").text().replaceAll(" ", "").replaceAll("下一页尾页", "");
+//                        page = page.substring(page.length() - 1);
                         Matcher m = SEARCHID_PATTERN.matcher(pages.get(0).select("a").attr("href"));
                         String searchID = "";
                         while (m.find()) {

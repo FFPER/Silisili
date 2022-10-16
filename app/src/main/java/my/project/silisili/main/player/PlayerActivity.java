@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -197,7 +198,11 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     public void startPic() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START))
             drawerLayout.closeDrawer(GravityCompat.START);
-        new Handler().postDelayed(this::enterPicInPic, 500);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            new Handler().postDelayed(this::enterPicInPic, 500);
+        }else{
+            Toast.makeText(this,R.string.picture_in_picture_title,Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void initAdapter() {

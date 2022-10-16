@@ -42,6 +42,7 @@ public class AnimeListModel implements AnimeListContract.Model{
             public void onResponse(Call call, Response response) {
                 try{
                     Document body = Jsoup.parse(response.body().string());
+//                    Elements animeList = body.getElementsByClass("play-pannel-list").select("ul");
                     Elements animeList = body.getElementsByClass("anime_list").select("dl");
                     if (animeList.size() > 0) {
                         if (isMain) {
