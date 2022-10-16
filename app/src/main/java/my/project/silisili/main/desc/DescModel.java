@@ -1,5 +1,7 @@
 package my.project.silisili.main.desc;
 
+import android.text.TextUtils;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -8,6 +10,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import my.project.silisili.R;
 import my.project.silisili.application.Silisili;
@@ -40,38 +43,37 @@ public class DescModel implements DescContract.Model {
             public void onResponse(Call call, Response response) {
                 try {
                     Document doc = Jsoup.parse(response.body().string());
-                    Elements detail = doc.getElementsByClass("detail");
+                    Element detail = doc.getElementById("main");
                     //新版解析方案
-                    if (detail.size() > 0) {
+                    if (detail != null) {
                         AnimeDescHeaderBean bean = new AnimeDescHeaderBean();
-                        String animeName = detail.get(0).select("h1").text();
-                        bean.setImg(detail.get(0).select("img").attr("src").contains("http") ? detail.get(0).select("img").attr("src") : Silisili.DOMAIN + detail.get(0).select("img").attr("src"));
+                        String animeName = detail.select("h1").text();
+                        bean.setImg(detail.select("img").attr("src").contains("http") ? detail.select("img").attr("src") : Silisili.DOMAIN + detail.select("img").attr("src"));
                         bean.setName(animeName);
                         //创建index
                         DatabaseUtil.addAnime(animeName);
                         fid = DatabaseUtil.getAnimeID(animeName);
                         dramaStr = DatabaseUtil.queryAllIndex(fid);
-                        Elements tags = detail.get(0).getElementsByClass("d_label");
+                        Elements tags = detail.select("div.v_sd_r > p:first-child > a");
                         bean.setUrl(url);
                         setTags(tags, bean);
                         //简介
-                        bean.setDesc(detail.get(0).getElementById("content") == null ? "" : detail.get(0).getElementById("content").text().replaceAll(".*()：", ""));
+                        bean.setDesc(detail.select("div.v_cont").get(0).childNode(2) == null ? "略" : detail.select("div.v_cont").get(0).childNode(2).toString().replaceAll(".*()：", "")
+                                .replaceAll("&nbsp;"," "));
                         callback.successDesc(bean);
-
-                        Elements playDesc = doc.getElementsByClass("stitle").get(0).select("span >a");
-                        Elements play = doc.getElementsByClass("time_pic");
-                        if (play.size() > 0) {
-                            //分集
-                            Elements play_list = doc.getElementsByClass("time_pic").get(0).getElementsByClass("swiper-slide").select("ul.clear >li");
-                            //下载
-                            Elements down = doc.getElementsByClass("time_pic").get(0).getElementsByClass("xfswiper3").select("ul.clear >li >a");
-                            //推荐
-                            Elements recommend = doc.getElementsByClass("swiper3").select("ul > li");
-                            for (int i = 0; i < playDesc.size(); i++) {
-                                String str = playDesc.get(i).text();
-                                if (str.equals("在线")) {
-                                    setPlayData(play_list);
-                                } else if (str.equals("下载")) {
+// 播放类型/下载
+                        Elements playDesc = doc.select("div.play-pannel-box div.widget-title");
+                        Elements play = doc.getElementsByClass("play-pannel-list");
+                        if (play.size() > 0) {// 有数据
+                            for (int i = 0; i < play.size(); i++) {
+                                String typeTitle = playDesc.get(i).text().toUpperCase(Locale.CHINA);
+                                if (!typeTitle.contains("下载")) {
+                                    //分集
+                                    Elements play_list = play.get(i).select("ul > li");
+                                    setPlayData(typeTitle, play_list);
+                                } else {
+                                    //下载
+                                    Elements down = play.get(i).select("ul > li > a");
                                     if (down.size() > 0) {
                                         List<DownBean> downList = new ArrayList<>();
                                         for (int j = 0; j < down.size(); j++) {
@@ -88,6 +90,12 @@ public class DescModel implements DescContract.Model {
                                     }
                                 }
                             }
+//                            //分集
+//                            Elements play_list = doc.getElementsByClass("time_pic").get(0).getElementsByClass("swiper-slide").select("ul.clear >li");
+                            //下载
+//                            Elements down = doc.getElementsByClass("time_pic").get(0).getElementsByClass("xfswiper3").select("ul.clear >li >a");
+                            //推荐
+                            Elements recommend = doc.getElementsByClass("sliderlist").select("div.vod_hl_list a");
                             if (recommend.size() > 0) {
                                 setRecommendData(recommend);
                             }
@@ -111,48 +119,59 @@ public class DescModel implements DescContract.Model {
     public void setTags(Elements tags, AnimeDescHeaderBean bean) {
         List<String> tagTitles = new ArrayList<>();
         List<String> tagUrls = new ArrayList<>();
-        Element dq = tags.get(0);
+        for (int i = 0; i < tags.size(); i++) {
+            if (tags.get(i).attr("href").contains("/class/")) {
+                tagTitles.add(tags.get(i).text().replaceAll(".*()：", ""));
+                tagUrls.add(tags.get(i).attr("href"));
+                tags.remove(i);
+                i--;
+            }
+        }
+//        Element bq = tags.get(0);// 类型
+//        String tagStr = bq.text().replaceAll(".*()：", "");
+//        if (!tagStr.isEmpty()) {
+//            if (tagStr.contains("|"))
+//                for (String str : tagStr.split("\\|")) {
+//                    tagTitles.add(str);
+//                    tagUrls.add("");
+//                }
+//            else if (tagStr.contains(","))
+//                for (String str : tagStr.split(",")) {
+//                    tagTitles.add(str);
+//                    tagUrls.add("");
+//                }
+//            else if (tagStr.contains(" "))
+//                for (String str : tagStr.split(" ")) {
+//                    tagTitles.add(str);
+//                    tagUrls.add("");
+//                }
+//        }
+        //类型的数据已经被删除
+        Element dq = tags.get(0);//地区
         tagTitles.add(dq.text().replaceAll(".*()：", ""));
         tagUrls.add(dq.select("a").attr("href"));
-        Element nd = tags.get(1);
+        Element nd = tags.get(1);//年度
         tagTitles.add(nd.text().replaceAll(".*()：", ""));
         tagUrls.add(nd.select("a").attr("href"));
-        Element bq = tags.get(2);
-        String tagStr = bq.text().replaceAll(".*()：", "");
-        if (!tagStr.isEmpty()) {
-            if (tagStr.contains("|"))
-                for (String str : tagStr.split("\\|")) {
-                    tagTitles.add(str);
-                    tagUrls.add("");
-                }
-            else if (tagStr.contains(","))
-                for (String str : tagStr.split(",")) {
-                    tagTitles.add(str);
-                    tagUrls.add("");
-                }
-            else if (tagStr.contains(" "))
-                for (String str : tagStr.split(" ")) {
-                    tagTitles.add(str);
-                    tagUrls.add("");
-                }
-        }
-        Element zt = tags.get(3);
+        Element zt = tags.get(2);//语言
         tagTitles.add(zt.text().replaceAll(".*()：", ""));
-        tagUrls.add("");
+        tagUrls.add(zt.select("a").attr("href"));
         bean.setTagTitles(tagTitles);
         bean.setTagUrls(tagUrls);
     }
 
     /**
      * 番剧列表
+     *
+     * @param type 在线播放源
      * @param els
      */
-    public void setPlayData(Elements els) {
+    public void setPlayData(String type, Elements els) {
         List<AnimeDescDetailsBean> animeDescDetailsBeans = new ArrayList<>();
         int k = 0;
         boolean select;
         for (int i = 0; i < els.size(); i++) {
-            String name = els.get(i).select("a>em>span").text();
+            String name = els.get(i).select("a").text();
             String watchUrl = els.get(i).select("a").attr("href");
             if (!watchUrl.isEmpty()) {
                 k++;
@@ -160,23 +179,26 @@ public class DescModel implements DescContract.Model {
                     select = true;
                 else
                     select = false;
-                animeDescDetailsBeans.add(new AnimeDescDetailsBean(name, els.get(i).select("a").attr("href"), select));
+                animeDescDetailsBeans.add(new AnimeDescDetailsBean(name, watchUrl, select));
             }
         }
         if (k == 0)
             animeDescDetailsBeans.add(new AnimeDescDetailsBean(Utils.getString(R.string.no_resources), "", false));
-        animeDescBean.setAnimeDescDetailsBeans(animeDescDetailsBeans);
+        animeDescBean.addAnimeDescDetailsBeans(type, animeDescDetailsBeans);
     }
 
     public void setRecommendData(Elements els) {
         List<AnimeDescRecommendBean> animeDescRecommendBeans = new ArrayList<>();
         for (int i = 0; i < els.size(); i++) {
             String str = els.get(i).text();
-            if (!str.equals(""))
-                animeDescRecommendBeans.add(new AnimeDescRecommendBean(els.get(i).select("p").text(),
-                        els.get(i).select("img").attr("src").contains("http") ? els.get(i).select("img").attr("src") : Silisili.DOMAIN + els.get(i).select("img").attr("src"),
-                        Silisili.DOMAIN + els.get(i).select("a").attr("href"))
-                );
+            String imagePath = "";
+            if (!TextUtils.isEmpty(str)) {
+                imagePath = els.get(i).selectFirst("i.thumb").attr("style").split("\\(")[1].split("\\)")[0];
+            }
+            animeDescRecommendBeans.add(new AnimeDescRecommendBean(str,
+                    imagePath.contains("http") ? imagePath : Silisili.DOMAIN + imagePath,
+                    Silisili.DOMAIN + els.get(i).select("a").attr("href"))
+            );
         }
         animeDescBean.setAnimeDescRecommendBeans(animeDescRecommendBeans);
     }
