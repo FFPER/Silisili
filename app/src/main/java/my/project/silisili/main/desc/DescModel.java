@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -58,7 +59,8 @@ public class DescModel implements DescContract.Model {
                         bean.setUrl(url);
                         setTags(tags, bean);
                         //简介
-                        bean.setDesc(detail.select("div.v_cont").get(0).childNode(2) == null ? "略" : detail.select("div.v_cont").get(0).childNode(2).toString().replaceAll(".*()：", "")
+                        Node descNode = detail.select("div.v_cont").get(0).childNode(1);
+                        bean.setDesc(descNode == null ? "略" : descNode.toString().replaceAll(".*()：", "")
                                 .replaceAll("&nbsp;"," "));
                         callback.successDesc(bean);
 // 播放类型/下载
