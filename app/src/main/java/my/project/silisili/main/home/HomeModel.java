@@ -3,6 +3,8 @@ package my.project.silisili.main.home;
 import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import my.project.silisili.R;
 import my.project.silisili.net.HttpGet;
@@ -31,14 +34,14 @@ public class HomeModel implements HomeContract.Model {
     public void getData(final HomeContract.LoadDataCallback callback) {
         new HttpGet(my.project.silisili.application.Silisili.DOMAIN, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.error(e.getMessage());
             }
 
             @Override
-            public void onResponse(Call call, Response response) {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 try {
-                    LinkedHashMap map = new LinkedHashMap();
+                    LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                     JSONObject weekObj = new JSONObject();
                     Document body = Jsoup.parse(response.body().string());
 //                        map.put("url", body.select("ul.nav_lef > li").get(1).select("a").get(0).attr("href"));
@@ -50,9 +53,11 @@ public class HomeModel implements HomeContract.Model {
 //                        setDataToJson(TABS[4], body.select("div.xfswiper4 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
 //                        setDataToJson(TABS[5], body.select("div.xfswiper5 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
 //                        setDataToJson(TABS[6], body.select("div.xfswiper6 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-                    // FIXME: 2022/10/15 增加新版页面处理
-                    map.put("url", body.select("ul.tab-content > li").get(1).select("a").get(0).attr("href"));
-                    map.put("title", body.select("ul.tab-content > li").get(1).select("a").get(0).attr("title"));
+                    // 2022/12/10 这里对应的侧滑菜单的第一项，需要先整一个标签放上就行  AnimeListModel.java
+                    Element titleEle = body.select("div.widget-title").get(0);
+                    String url = String.format("%1$s%2$s", my.project.silisili.application.Silisili.DOMAIN, titleEle.select("a").get(0).attr("href"));
+                    map.put("url", url);
+                    map.put("title", titleEle.childNode(0).toString().replaceAll("\n", ""));
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
                     String date = sdf.format(Calendar.getInstance().getTime());
 
