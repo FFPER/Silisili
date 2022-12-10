@@ -38,19 +38,19 @@ public class NormalWebView extends WebView {
         webSetting.setJavaScriptEnabled(true);
         webSetting.setJavaScriptCanOpenWindowsAutomatically(true);
         webSetting.setAllowFileAccess(false);
-        webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
         webSetting.setSupportZoom(false);
         webSetting.setBuiltInZoomControls(false);
         webSetting.setUseWideViewPort(true);
         webSetting.setSupportMultipleWindows(true);
         // webSetting.setLoadWithOverviewMode(true);
-        webSetting.setAppCacheEnabled(true);
+//        webSetting.setAppCacheEnabled(true);--android 13不支持
         //是否调节内容 是否全屏
         webSetting.setLoadWithOverviewMode(true);
         // webSetting.setDatabaseEnabled(true);
         webSetting.setDomStorageEnabled(true);
         webSetting.setGeolocationEnabled(false);
-        webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
+//        webSetting.setAppCacheMaxSize(Long.MAX_VALUE);--android 13不支持
         // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
         webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
         // webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
