@@ -39,7 +39,7 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
     private AnimeListAdapter adapter;
     private List<AnimeDescHeaderBean> searchList = new ArrayList<>();
     private String title = "";
-    private int page = 0;
+    private int page = 1;
     private int pageCount = 0;
     private boolean isErr = true;
     private String searchID = "";

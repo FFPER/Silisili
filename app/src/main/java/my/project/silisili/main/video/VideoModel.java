@@ -27,7 +27,7 @@ import okhttp3.Response;
 
 public class VideoModel implements VideoContract.Model {
     private final static Pattern PLAY_URL_PATTERN = Pattern.compile("(https?|ftp|file):\\/\\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
-    private final static Pattern PLAY_DATA_OBJECT = Pattern.compile("\\{(.+?)\\}");
+    private final static Pattern PLAY_DATA_OBJECT = Pattern.compile("\\{(.+?)\\}");//截取之间的字符穿
 
     @Override
     public void getData(String title, String HTML_url, VideoContract.LoadDataCallback callback) {

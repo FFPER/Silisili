@@ -2,10 +2,11 @@ package my.project.silisili.main.search;
 
 import android.util.Log;
 
-import androidx.core.net.UriCompat;
+import androidx.annotation.NonNull;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
@@ -26,22 +27,23 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class SearchModel implements SearchContract.Model {
-    private final static Pattern SEARCHID_PATTERN = Pattern.compile("searchid=(.*)");
+    //    private final static Pattern SEARCHID_PATTERN = Pattern.compile("searchid=(.*)");
+    private final static Pattern SEARCH_ID_PATTERN = Pattern.compile("vodsearch(.+?)\\/");//截取之间的字符穿
 
     @Override
-    public void getData(String title, String seaechID, int page, boolean isMain, SearchContract.LoadDataCallback callback) {
+    public void getData(String title, String searchId, int page, boolean isMain, SearchContract.LoadDataCallback callback) {
         Log.e("page", page + "");
-        if (page != 0) {
+        if (page != 1) {// 不是首页，就可以请求
             // 如果不是第一页 则使用GET方式
-            Log.e("分页GET", String.format(Api.SEARCH_GET_API, seaechID, page));
-            new HttpGet(String.format(Api.SEARCH_GET_API, seaechID, page), new Callback() {
+            Log.e("分页GET", String.format(Api.SEARCH_GET_API, searchId, page));
+            new HttpGet(String.format(Api.SEARCH_GET_API, searchId, page), new Callback() {
                 @Override
-                public void onFailure(Call call, IOException e) {
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     callback.error(isMain, e.getMessage());
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     getSearchData(response, isMain, callback);
                 }
             });
@@ -56,12 +58,12 @@ public class SearchModel implements SearchContract.Model {
             }
             new HttpPost(Api.SEARCH_API, "wd=" + encodedUrl, new Callback() {
                 @Override
-                public void onFailure(Call call, IOException e) {
+                public void onFailure(@NonNull Call call, IOException e) {
                     callback.error(isMain, e.getMessage());
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     getSearchData(response, isMain, callback);
                 }
             });
@@ -71,24 +73,26 @@ public class SearchModel implements SearchContract.Model {
 
     public void getSearchData(Response response, boolean isMain, SearchContract.LoadDataCallback callback) {
         try {
+            assert response.body() != null;
             Document body = Jsoup.parse(response.body().string());
             Elements animeList = body.getElementsByClass("post-list").select("div.entry-container");
             if (animeList.size() > 0) {
-                if (isMain) {
-                    Elements pages = body.select("ul.list-page > li > a");
-                    if (pages.size() > 0) {
-                        // 现在无法知道总页码
-                        String page = "50";// pages.get(0).select("a").text().replaceAll(" ", "").replaceAll("下一页尾页", "");
-//                        page = page.substring(page.length() - 1);
-                        Matcher m = SEARCHID_PATTERN.matcher(pages.get(0).select("a").attr("href"));
+                Elements pages = body.select("ul.list-page > li > a");
+                if (pages.size() > 0) {
+                    // 现在无法知道总页码,所以应该每次请求的时候重新解析页码 最后一个是个香油的箭头
+                    Element element = pages.get(pages.size() - 2);
+                    // 获取页码
+                    String page = element.text();
+                    if (isMain) {
+                        // 只有首次加载的时候才需要筛选出查询条件
+                        Matcher m = SEARCH_ID_PATTERN.matcher(element.attr("href"));
                         String searchID = "";
-                        while (m.find()) {
-                            searchID = m.group().replaceAll("searchid=", "");
-                            break;
+                        if (m.find()) {
+                            searchID = m.group().replace("vodsearch", "").replace("/", "");
                         }
                         callback.searchID(searchID);
-                        callback.pageCount(Integer.parseInt(page));
                     }
+                    callback.pageCount(Integer.parseInt(page));
                 }
                 // 第一页肯定走这个方法
                 List<AnimeDescHeaderBean> list = new ArrayList<>();
