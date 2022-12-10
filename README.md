@@ -1,4 +1,4 @@
-# 2022-10-16 修改最新解析程序(自己用)
+# 2022-10-16 修改最新解析程序(自用)
 # 嘶哩嘶哩 
 ![](https://img.shields.io/badge/Android-5.0%20or%20above-brightgreen.svg) 
 [![Latest Release](https://img.shields.io/github/release/670848654/Silisili.svg)](../../releases)
