@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "my.project.silisili"
         minSdkVersion 21
@@ -10,7 +9,7 @@ android {
         versionCode 16
         versionName "1.0-beta16"
         ndk { abiFilters "armeabi", "x86" }
-        resConfigs "zh"
+        resConfigs 'zh'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -23,9 +22,11 @@ android {
         }
     }
     packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/beans.xml'
+        resources {
+            excludes += ['META-INF/LICENSE.txt', 'META-INF/beans.xml']
+        }
     }
+    namespace 'my.project.silisili'
 }
 
 allprojects {
