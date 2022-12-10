@@ -33,3 +33,9 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+// Define versions in a single place
+ext {
+    // SDK And Tools
+    exoplayerVersion = '2.11.1'
+}
