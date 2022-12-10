@@ -1,5 +1,7 @@
 package my.project.silisili.main.tag;
 
+import androidx.annotation.NonNull;
+
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import org.jsoup.Jsoup;
@@ -31,12 +33,12 @@ public class TagModel implements TagContract.Model {
     public void getData(TagContract.LoadDataCallback callback) {
         new HttpGet(Silisili.TAG, new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 callback.error(e.getMessage());
             }
 
             @Override
-            public void onResponse(Call call, Response response) {
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
                 try {
                     Document doc = Jsoup.parse(response.body().string());
                     Elements taglist = doc.select("div.tagbox.m-10");

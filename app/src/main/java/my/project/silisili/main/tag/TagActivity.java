@@ -58,7 +58,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
     FloatingActionButton tag_btn;
     private AnimeListPresenter animeListPresenter;
     private String animeUrl;
-    private int nowPage = 0;
+    private int nowPage = 1;
     private int pageCount = 0;
     private boolean isErr = true;
 
@@ -115,7 +115,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
         mSwipe.setOnRefreshListener(() -> {
             animeLists.clear();
             animeListAdapter.setNewData(animeLists);
-            nowPage = 0;
+            nowPage = 1;
             animeListPresenter = new AnimeListPresenter(animeUrl, nowPage, this);
             animeListPresenter.loadData(true);
         });
@@ -190,7 +190,7 @@ public class TagActivity extends BaseActivity<TagContract.View, TagPresenter> im
             animeUrl = VideoUtils.getSiliUrl(bean.getUrl());
             animeListAdapter.setNewData(null);
             animeListAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.base_emnty_view, null));
-            nowPage = 0;
+            nowPage = 1;
             animeListPresenter = new AnimeListPresenter(animeUrl, nowPage, this);
             animeListPresenter.loadData(true);
         });

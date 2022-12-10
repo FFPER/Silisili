@@ -43,13 +43,13 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
     @BindView(R.id.query)
     FloatingActionButton query;
     private String title, url;
-    private int nowPage = 0;
+    private int nowPage = 1;
     private int pageCount = 0;
     private boolean isErr = true;
 
     @Override
     protected AnimeListPresenter createPresenter() {
-        return new AnimeListPresenter(url, nowPage,this);
+        return new AnimeListPresenter(url, nowPage, this);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
 
     @Override
     protected void init() {
-        Slidr.attach(this,Utils.defaultInit());
+        Slidr.attach(this, Utils.defaultInit());
         getBundle();
         initToolbar();
         initFab();
@@ -77,7 +77,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
         SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
-    public void getBundle(){
+    public void getBundle() {
         Bundle bundle = getIntent().getExtras();
         if (!bundle.isEmpty()) {
             title = bundle.getString("title");
@@ -85,7 +85,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
         }
     }
 
-    public void initToolbar(){
+    public void initToolbar() {
         toolbar.setTitle(title);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -105,19 +105,19 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
         query.setVisibility(View.VISIBLE);
     }
 
-    public void initSwipe(){
+    public void initSwipe() {
         mSwipe.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
         mSwipe.setOnRefreshListener(() -> {
             animeList.clear();
             adapter.setNewData(animeList);
-            nowPage = 0;
+            nowPage = 1;
             pageCount = 0;
             mPresenter = createPresenter();
             mPresenter.loadData(true);
         });
     }
 
-    public void initAdapter(){
+    public void initAdapter() {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, Utils.isPad() ? 5 : 3));
         adapter = new AnimeListAdapter(this, animeList);
         adapter.openLoadAnimation();
@@ -135,10 +135,11 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
             bundle.putString("url", siliUrl);
             startActivity(new Intent(AnimeListActivity.this, DescActivity.class).putExtras(bundle));
         });
-        if (Utils.checkHasNavigationBar(this)) mRecyclerView.setPadding(0,0,0, Utils.getNavigationBarHeight(this));
+        if (Utils.checkHasNavigationBar(this))
+            mRecyclerView.setPadding(0, 0, 0, Utils.getNavigationBarHeight(this));
         adapter.setLoadMoreView(new CustomLoadMoreView());
         adapter.setOnLoadMoreListener(() -> mRecyclerView.postDelayed(() -> {
-            if (nowPage >= pageCount -1) {
+            if (nowPage >= pageCount) {
                 //数据全部加载完毕
                 adapter.loadMoreEnd();
                 application.showSuccessToastMsg(Utils.getString(R.string.no_more));
@@ -159,7 +160,7 @@ public class AnimeListActivity extends BaseActivity<AnimeListContract.View, Anim
     }
 
     @OnClick(R.id.query)
-    public void query(){
+    public void query() {
         startActivity(new Intent(this, SearchActivity.class));
     }
 
