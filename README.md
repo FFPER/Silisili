@@ -1,5 +1,5 @@
-# 2022-10-16 修改最新解析程序(自用)
-# 嘶哩嘶哩 
+# 嘶哩嘶哩
+## 2022-12-11 能搜索，能播放。
 ![](https://img.shields.io/badge/Android-5.0%20or%20above-brightgreen.svg) 
 [![Latest Release](https://img.shields.io/github/release/670848654/Silisili.svg)](../../releases)
 ![](https://img.shields.io/github/downloads/670848654/Silisili/total)   
