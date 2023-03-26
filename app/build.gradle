@@ -5,6 +5,7 @@ android {
     defaultConfig {
         applicationId "my.project.silisili"
         minSdkVersion 21
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 30
         versionCode 16
         versionName "1.0-beta16"
@@ -40,10 +41,10 @@ allprojects {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'com.google.android.material:material:1.6.0-beta01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     implementation 'pub.devrel:easypermissions:3.0.0'
@@ -75,5 +76,5 @@ dependencies {
     implementation 'org.eclipse.jetty:jetty-client:8.1.22.v20160922'
     implementation 'com.wuyr:rippleanimation:1.0.0'
     implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1-x'
-    implementation 'org.greenrobot:eventbus:3.2.0'
+    implementation 'org.greenrobot:eventbus:3.3.1'
 }

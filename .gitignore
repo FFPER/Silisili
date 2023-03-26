@@ -12,3 +12,7 @@
 /captures
 .externalNativeBuild
 .cxx
+/app/release/
+/.idea/
+/sign.txt
+/snake.jks

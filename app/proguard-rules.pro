@@ -72,7 +72,7 @@
   #保护注解
   -keepattributes *Annotation*
  #如果有引用v4包可以添加下面这行
- -keep public class * extends android.support.v4.app.Fragment
+# -keep public class * extends android.support.v4.app.Fragment
  #如果引用了v4或者v7包
  -dontwarn android.support.**
  -keep public class * extends android.view.View {
@@ -138,7 +138,7 @@
  -keep public class * extends android.content.ContentProvider
  -keep public class * extends android.app.backup.BackupAgentHelper
  -keep public class * extends android.preference.Preference
- -keep public class com.android.vending.licensing.ILicensingService
+# -keep public class com.android.vending.licensing.ILicensingService
 
 #-optimizationpasses 7
 #-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
@@ -324,20 +324,20 @@
 }
 
 # Added for game demos
--keep public class com.tencent.smtt.sdk.TBSGamePlayer {
-	public <fields>;
-	public <methods>;
-}
+#-keep public class com.tencent.smtt.sdk.TBSGamePlayer {
+#	public <fields>;
+#	public <methods>;
+#}
 
 -keep public class com.tencent.smtt.sdk.TBSGamePlayerClient* {
 	public <fields>;
 	public <methods>;
 }
 
--keep public class com.tencent.smtt.sdk.TBSGamePlayerClientExtension {
-	public <fields>;
-	public <methods>;
-}
+#-keep public class com.tencent.smtt.sdk.TBSGamePlayerClientExtension {
+#	public <fields>;
+#	public <methods>;
+#}
 
 -keep public class com.tencent.smtt.sdk.TBSGamePlayerService* {
 	public <fields>;
@@ -363,31 +363,31 @@
 	*;
 }
 
--keep class com.tencent.mtt.MttTraceEvent {
-	*;
-}
+#-keep class com.tencent.mtt.MttTraceEvent {
+#	*;
+#}
 
 # Game related
 -keep public class com.tencent.smtt.gamesdk.* {
 	public protected *;
 }
 
--keep public class com.tencent.smtt.sdk.TBSGameBooter {
-        public <fields>;
-        public <methods>;
-}
+#-keep public class com.tencent.smtt.sdk.TBSGameBooter {
+#        public <fields>;
+#        public <methods>;
+#}
 
--keep public class com.tencent.smtt.sdk.TBSGameBaseActivity {
-	public protected *;
-}
+#-keep public class com.tencent.smtt.sdk.TBSGameBaseActivity {
+#	public protected *;
+#}
 
--keep public class com.tencent.smtt.sdk.TBSGameBaseActivityProxy {
-	public protected *;
-}
+#-keep public class com.tencent.smtt.sdk.TBSGameBaseActivityProxy {
+#	public protected *;
+#}
 
--keep public class com.tencent.smtt.gamesdk.internal.TBSGameServiceClient {
-	public *;
-}
+#-keep public class com.tencent.smtt.gamesdk.internal.TBSGameServiceClient {
+#	public *;
+#}
 #---------------------------------------------------------------------------
 
 
@@ -434,27 +434,27 @@
 # 方法名中含有“JRI”字符的，认定是Java Reflection Interface方法，自动排除
 
 -keepclasseswithmembers class * {
-    ... *JNI*(...);
+     *JNI*(...);
 }
 
 -keepclasseswithmembernames class * {
-	... *JRI*(...);
+	 *JRI*(...);
 }
 
 -keep class **JNI* {*;}
 
 #ijkplayer
--keep class tv.danmaku.ijk.media.player.** {*;}
--keep class tv.danmaku.ijk.media.player.IjkMediaPlayer{*;}
--keep class tv.danmaku.ijk.media.player.ffmpeg.FFmpegApi{*;}
--dontwarn tv.danmaku.ijk.media.player.*
--keep interface tv.danmaku.ijk.media.player.** { *; }
+#-keep class tv.danmaku.ijk.media.player.** {*;}
+#-keep class tv.danmaku.ijk.media.player.IjkMediaPlayer{*;}
+#-keep class tv.danmaku.ijk.media.player.ffmpeg.FFmpegApi{*;}
+#-dontwarn tv.danmaku.ijk.media.player.*
+#-keep interface tv.danmaku.ijk.media.player.** { *; }
 
 -keep public class my.project.silisili.main.player.JZExoPlayer {*;}
 -keep public class cn.jzvd.JZMediaSystem {*; }
--keep public class cn.jzvd.demo.CustomMedia.CustomMedia {*; }
--keep public class cn.jzvd.demo.CustomMedia.JZMediaIjk {*; }
--keep public class cn.jzvd.demo.CustomMedia.JZMediaSystemAssertFolder {*; }
+#-keep public class cn.jzvd.demo.CustomMedia.CustomMedia {*; }
+#-keep public class cn.jzvd.demo.CustomMedia.JZMediaIjk {*; }
+#-keep public class cn.jzvd.demo.CustomMedia.JZMediaSystemAssertFolder {*; }
 
 #OkHttp3
 -dontwarn com.squareup.okhttp3.**
