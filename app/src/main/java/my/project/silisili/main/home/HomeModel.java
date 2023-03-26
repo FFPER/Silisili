@@ -53,11 +53,11 @@ public class HomeModel implements HomeContract.Model {
 //                        setDataToJson(TABS[4], body.select("div.xfswiper4 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
 //                        setDataToJson(TABS[5], body.select("div.xfswiper5 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
 //                        setDataToJson(TABS[6], body.select("div.xfswiper6 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-                    // 2022/12/10 这里对应的侧滑菜单的第一项，需要先整一个标签放上就行  AnimeListModel.java
-                    Element titleEle = body.select("div.widget-title").get(0);
+                    // 2022/12/10 这里对应的侧滑菜单的第一项，需要先整一个标签放上就行，放上番剧的第一个吧  AnimeListModel.java
+                    Element titleEle = body.select("div.swiper-slide").get(0);
                     String url = String.format("%1$s%2$s", my.project.silisili.application.Silisili.DOMAIN, titleEle.select("a").get(0).attr("href"));
                     map.put("url", url);
-                    map.put("title", titleEle.childNode(0).toString().replaceAll("\n", ""));
+                    map.put("title", titleEle.select("div.swiper-slide-votitle").get(0).childNode(1));
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
                     String date = sdf.format(Calendar.getInstance().getTime());
 

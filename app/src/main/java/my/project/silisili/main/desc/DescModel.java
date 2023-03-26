@@ -60,8 +60,7 @@ public class DescModel implements DescContract.Model {
                         setTags(tags, bean);
                         //简介
                         Node descNode = detail.select("div.v_cont").get(0).childNode(1);
-                        bean.setDesc(descNode == null ? "略" : descNode.toString().replaceAll(".*()：", "")
-                                .replaceAll("&nbsp;"," "));
+                        bean.setDesc(getDescText(descNode));
                         callback.successDesc(bean);
 // 播放类型/下载
                         Elements playDesc = doc.select("div.play-pannel-box div.widget-title");
@@ -116,6 +115,24 @@ public class DescModel implements DescContract.Model {
                 }
             }
         });
+    }
+
+    /**
+     * 设置简介的文本
+     *
+     * @param descNode 简介的节点
+     * @return 简介文本
+     */
+    private String getDescText(Node descNode) {
+        if (descNode == null) {
+            return "略";
+        } else if (descNode.toString().startsWith("<")) {
+            return "略";
+        } else {
+            return descNode.toString().replaceAll("&nbsp;", " ");
+        }
+//        bean.setDesc(descNode == null ? "略" : descNode.toString().replaceAll(".*()：", "")
+//                .replaceAll("&nbsp;", " "));
     }
 
     public void setTags(Elements tags, AnimeDescHeaderBean bean) {
