@@ -122,15 +122,15 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         //源地址
         siliUrl = bundle.getString("sili");
         //剧集list
-        list = (List<AnimeDescDetailsBean>) bundle.getSerializable("list");
+        list =  (List<AnimeDescDetailsBean>) bundle.getSerializable("list");
         //当前播放剧集下标
         clickIndex = bundle.getInt("clickIndex");
         //禁止冒泡
         linearLayout.setOnClickListener(view -> {
-            return;
+
         });
         navConfigView.setOnClickListener(view -> {
-            return;
+
         });
         setPlayerPreNextTag();
         linearLayout.getBackground().mutate().setAlpha(150);
@@ -177,8 +177,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         });
         // 加载视频失败，嗅探视频
         player.snifferBtn.setOnClickListener(v -> snifferPlayUrl(url));
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) picConfig.setVisibility(View.GONE);
-        else picConfig.setVisibility(View.VISIBLE);
+        picConfig.setVisibility(View.VISIBLE);
         if (gtSdk23()) player.tvSpeed.setVisibility(View.VISIBLE);
         else player.tvSpeed.setVisibility(View.GONE);
         player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
