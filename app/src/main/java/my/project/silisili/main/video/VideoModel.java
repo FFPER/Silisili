@@ -68,21 +68,17 @@ public class VideoModel implements VideoContract.Model {
 //                                Document doc = Jsoup.parse(response.body().string());
                     String source = doc.select("source").attr("src");
                     if (source.isEmpty()) {
-                        Elements scripts = doc.select("script");
-                        for (Element element : scripts) {
-                            String html = element.html();
-                            if (html.contains("var player_data")) {
-                                //  2022/12/10 这里不能使用正则表达式获取了
-//                                Matcher m = PLAY_URL_PATTERN.matcher(URLDecoder.decode(element.html(), "UTF-8"));
+                        Elements elements = doc.getElementsByTag("script");
+                        String varFlag = "var player_aaaa=";//比较的文字
+                        for (int i = 0; i < elements.size(); i++) {
+                            String html = elements.get(i).data();
+                            if (html.contains(varFlag)) {
+                                source = html.replaceAll("\n", "").replaceAll(varFlag, ""); //这里是为了解决 无法多行匹配的问题
+                                // 需要先base64转义再decode
+//                                Matcher m = PLAY_DATA_OBJECT.matcher(URLDecoder.decode(html, "UTF-8"));
 //                                if (m.find()) {
 //                                    source = m.group();
-//                                    break;
 //                                }
-                                // 需要先base64转义再decode
-                                Matcher m = PLAY_DATA_OBJECT.matcher(URLDecoder.decode(html, "UTF-8"));
-                                if (m.find()) {
-                                    source = m.group();
-                                }
                                 try {
                                     JSONObject jsonObject = new JSONObject(source);
                                     source = jsonObject.getString("url");
@@ -91,11 +87,13 @@ public class VideoModel implements VideoContract.Model {
                                     }
 //                                  需要判断url是否是base64编码，1 否 0 是
                                     String encrypt = jsonObject.getString("encrypt");
-                                    if ("1".equals(encrypt)) {
-                                    } else if ("2".equals(encrypt)) {
+//                                    if ("1".equals(encrypt)) {
+//                                    } else
+                                    if ("2".equals(encrypt)) {
                                         source = new String(Base64.decode(source.getBytes(), Base64.NO_WRAP));
                                     }
                                     source = URLDecoder.decode(source, "UTF-8");
+                                    break;
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                     break;

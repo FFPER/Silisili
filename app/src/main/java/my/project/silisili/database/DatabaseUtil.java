@@ -28,28 +28,30 @@ public class DatabaseUtil {
     /**
      * 关闭数据库连接
      */
-    public static void closeDB(){
+    public static void closeDB() {
         db.close();
     }
 
     /**
      * 新增点击过的番剧名称
+     *
      * @param title
      */
-    public static void addAnime(String title){
+    public static void addAnime(String title) {
         if (!checkAnime(title))
             db.execSQL("insert into t_anime values(?,?,?)",
-                new Object[] { null, UUID.randomUUID().toString(), title});
+                    new Object[]{null, UUID.randomUUID().toString(), title});
     }
 
     /**
      * 检查番剧名称是否存在
+     *
      * @param title
      * @return
      */
-    public static boolean checkAnime(String title){
+    public static boolean checkAnime(String title) {
         String Query = "select * from t_anime where f_title =?";
-        Cursor cursor = db.rawQuery(Query, new String[] { title });
+        Cursor cursor = db.rawQuery(Query, new String[]{title});
         if (cursor.getCount() > 0) {
             cursor.close();
             return true;
@@ -60,36 +62,43 @@ public class DatabaseUtil {
 
     /**
      * 获取番剧fid
+     *
      * @param title
      * @return
      */
-    public static String getAnimeID(String title){
+    public static String getAnimeID(String title) {
+        String id = "";
         String Query = "select * from t_anime where f_title =?";
-        Cursor cursor = db.rawQuery(Query, new String[] { title });
-        cursor.moveToNext();
-        return cursor.getString(1);
+        Cursor cursor = db.rawQuery(Query, new String[]{title});
+        if (cursor.moveToNext()) {
+            id = cursor.getString(1);
+        }
+        cursor.close();
+        return id;
     }
 
     /**
      * 新增点击过的剧集名称
+     *
      * @param fid 父id
      * @param url 播放地址
      */
-    public static void addIndex(String fid, String url){
+    public static void addIndex(String fid, String url) {
         if (!checkIndex(fid, url))
             db.execSQL("insert into t_index values(?,?,?)",
-                    new Object[] { null, fid, url});
+                    new Object[]{null, fid, url});
     }
 
     /**
      * 检查剧集名称是否存在
+     *
      * @param fid 父id
      * @param url 播放地址
      * @return
      */
-    private static boolean checkIndex(String fid, String url){
+    private static boolean checkIndex(String fid, String url) {
         String Query = "select * from t_index where f_pid =? and f_url like ?";
-        Cursor cursor = db.rawQuery(Query, new String[] { fid, "%" + url + "%" });
+        Cursor cursor = db.rawQuery(Query, new String[]{fid, "%" + url + "%"});
         if (cursor.getCount() > 0) {
             cursor.close();
             return true;
@@ -100,13 +109,14 @@ public class DatabaseUtil {
 
     /**
      * 检查当前fid所有剧集
+     *
      * @param fid 番剧ID
      * @return
      */
-    public static String queryAllIndex(String fid){
+    public static String queryAllIndex(String fid) {
         StringBuffer buffer = new StringBuffer();
         String Query = "select * from t_index where f_pid =?";
-        Cursor c = db.rawQuery(Query, new String[] { fid });
+        Cursor c = db.rawQuery(Query, new String[]{fid});
         while (c.moveToNext()) {
             buffer.append(c.getString(2));
         }
@@ -121,7 +131,7 @@ public class DatabaseUtil {
         List<AnimeDescHeaderBean> list = new ArrayList<>();
 //        Cursor c = db.rawQuery("select * from t_favorite order by id desc", null);
         String parameter = "%s,%s";
-        Cursor c = db.query("t_favorite", null, null, null,null,null,"id DESC",
+        Cursor c = db.query("t_favorite", null, null, null, null, null, "id DESC",
                 String.format(parameter, offset, limit));
         while (c.moveToNext()) {
             AnimeDescHeaderBean bean = new AnimeDescHeaderBean();
@@ -141,7 +151,8 @@ public class DatabaseUtil {
     }
 
     /**
-     *  查询用户收藏总数
+     * 查询用户收藏总数
+     *
      * @return
      */
     public static int queryFavoriteCount() {
@@ -155,14 +166,15 @@ public class DatabaseUtil {
 
     /**
      * 收藏or删除收藏
+     *
      * @param bean
      * @return true 收藏成功 false 移除收藏
      */
-    public static boolean favorite(AnimeDescHeaderBean bean){
-        if (checkFavorite(bean.getName())){
+    public static boolean favorite(AnimeDescHeaderBean bean) {
+        if (checkFavorite(bean.getName())) {
             deleteFavorite(bean.getName());
             return false;
-        }else {
+        } else {
             addFavorite(bean);
             return true;
         }
@@ -170,34 +182,36 @@ public class DatabaseUtil {
 
     /**
      * 添加到收藏
+     *
      * @param bean
      */
-    private static void addFavorite(AnimeDescHeaderBean bean){
+    private static void addFavorite(AnimeDescHeaderBean bean) {
         db.execSQL("insert into t_favorite values(?,?,?,?,?,?,?,?,?,?)",
-                new Object[] { null,
-                bean.getName(),
-                bean.getUrl().substring(Silisili.DOMAIN.length()),
-                bean.getImg().contains(Silisili.DOMAIN) ? bean.getImg().substring(Silisili.DOMAIN.length()) : bean.getImg(),
-                bean.getRegion(),
-                bean.getYear(),
-                bean.getTag(),
-                bean.getDesc(),
-                bean.getShow(),
-                bean.getState()});
+                new Object[]{null,
+                        bean.getName(),
+                        bean.getUrl().substring(Silisili.DOMAIN.length()),
+                        bean.getImg().contains(Silisili.DOMAIN) ? bean.getImg().substring(Silisili.DOMAIN.length()) : bean.getImg(),
+                        bean.getRegion(),
+                        bean.getYear(),
+                        bean.getTag(),
+                        bean.getDesc(),
+                        bean.getShow(),
+                        bean.getState()});
     }
 
     /**
      * 更新收藏信息
+     *
      * @param bean
      */
     public static void updateFavorite(AnimeDescHeaderBean bean) {
         String Query = "select * from t_favorite where f_title =?";
-        Cursor cursor = db.rawQuery(Query, new String[] { bean.getName() });
+        Cursor cursor = db.rawQuery(Query, new String[]{bean.getName()});
         if (cursor.getCount() > 0) {
             cursor.moveToNext();
-            int id = cursor.getInt(cursor.getColumnIndex("id"));
+            int id = cursor.getInt(cursor.getColumnIndexOrThrow("id"));
             db.execSQL("update t_favorite set f_title=?, f_url=?, f_img=?, f_region=?, f_year=?, f_tag=?, f_desc=?, f_show=?, f_state=? where id=?",
-                    new Object[] {
+                    new Object[]{
                             bean.getName(),
                             bean.getUrl().substring(Silisili.DOMAIN.length()),
                             bean.getImg().contains(Silisili.DOMAIN) ? bean.getImg().substring(Silisili.DOMAIN.length()) : bean.getImg(),
@@ -214,20 +228,22 @@ public class DatabaseUtil {
 
     /**
      * 删除收藏
+     *
      * @param title
      */
-    public static void deleteFavorite(String title){
+    public static void deleteFavorite(String title) {
         db.execSQL("delete from t_favorite where f_title=?", new String[]{title});
     }
 
     /**
      * 检查番剧是否收藏
+     *
      * @param title
      * @return
      */
-    public static boolean checkFavorite(String title){
+    public static boolean checkFavorite(String title) {
         String Query = "select * from t_favorite where f_title =?";
-        Cursor cursor = db.rawQuery(Query, new String[] { title });
+        Cursor cursor = db.rawQuery(Query, new String[]{title});
         if (cursor.getCount() > 0) {
             cursor.close();
             return true;
