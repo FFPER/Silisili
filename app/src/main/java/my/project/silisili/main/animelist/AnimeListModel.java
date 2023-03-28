@@ -59,6 +59,8 @@ public class AnimeListModel implements AnimeListContract.Model {
                             // 获取页码
                             String page = element.text();
                             callback.pageCount(Integer.parseInt(page));
+                        } else {
+                            callback.pageCount(0);
                         }
                         // 第一页肯定走这个方法
                         List<AnimeDescHeaderBean> list = new ArrayList<>();

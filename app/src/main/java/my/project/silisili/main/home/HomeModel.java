@@ -1,7 +1,6 @@
 package my.project.silisili.main.home;
 
 import android.annotation.SuppressLint;
-import android.text.format.DateUtils;
 
 import androidx.annotation.NonNull;
 
@@ -14,13 +13,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
 import my.project.silisili.R;
+import my.project.silisili.api.Api;
 import my.project.silisili.net.HttpGet;
 import my.project.silisili.util.Utils;
 import okhttp3.Call;
@@ -53,11 +52,11 @@ public class HomeModel implements HomeContract.Model {
 //                        setDataToJson(TABS[4], body.select("div.xfswiper4 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
 //                        setDataToJson(TABS[5], body.select("div.xfswiper5 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
 //                        setDataToJson(TABS[6], body.select("div.xfswiper6 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-                    // 2022/12/10 这里对应的侧滑菜单的第一项，需要先整一个标签放上就行，放上番剧的第一个吧  AnimeListModel.java
-                    Element titleEle = body.select("div.swiper-slide").get(0);
-                    String url = String.format("%1$s%2$s", my.project.silisili.application.Silisili.DOMAIN, titleEle.select("a").get(0).attr("href"));
-                    map.put("url", url);
-                    map.put("title", titleEle.select("div.swiper-slide-votitle").get(0).childNode(1));
+                    // 2022/12/10 这里对应的侧滑菜单的第一项，需要先整一个标签放上就行，放上专题的第一个吧  AnimeListModel.java
+                    Element titleEle = body.select("div.row.wall > article:first-child").get(0);
+                    String title = titleEle.select("div.entry-meta").get(0).childNode(0).toString().replaceAll("\n", "");
+                    map.put("url", String.format("%s%s/", Api.TITLE_API, URLEncoder.encode(title, "utf-8")));
+                    map.put("title", title);
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
                     String date = sdf.format(Calendar.getInstance().getTime());
 
