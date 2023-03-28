@@ -54,7 +54,7 @@ public class AnimeListModel implements AnimeListContract.Model {
                     if (animeList.size() > 0) {
                         Elements pages = body.select("ul.list-page > li > a");
                         if (pages.size() > 0) {
-                            // 现在无法知道总页码,所以应该每次请求的时候重新解析页码 最后一个是个香油的箭头
+                            // 现在无法知道总页码,所以应该每次请求的时候重新解析页码 最后一个是个向右的箭头
                             Element element = pages.get(pages.size() - 2);
                             // 获取页码
                             String page = element.text();

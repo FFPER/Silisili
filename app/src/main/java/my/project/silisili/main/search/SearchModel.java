@@ -93,6 +93,8 @@ public class SearchModel implements SearchContract.Model {
                         callback.searchID(searchID);
                     }
                     callback.pageCount(Integer.parseInt(page));
+                } else {
+                    callback.pageCount(0);
                 }
                 // 第一页肯定走这个方法
                 List<AnimeDescHeaderBean> list = new ArrayList<>();

@@ -15,6 +15,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.r0adkll.slidr.Slidr;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -167,7 +170,12 @@ public class SearchActivity extends BaseActivity<SearchContract.View, SearchPres
                 }else {
                     title = query.replaceAll(" ", "");
                     if (!title.isEmpty()) {
-                        page = 0;
+                        page = 1;
+                        try {
+                            getSearchID(URLEncoder.encode(title,"UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            throw new RuntimeException(e);
+                        }
                         mPresenter = createPresenter();
                         mPresenter.loadData(true);
                         toolbar.setTitle(title);

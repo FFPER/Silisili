@@ -55,9 +55,8 @@ public class DescModel implements DescContract.Model {
                         DatabaseUtil.addAnime(animeName);
                         fid = DatabaseUtil.getAnimeID(animeName);
                         dramaStr = DatabaseUtil.queryAllIndex(fid);
-                        Elements tags = detail.select("div.v_sd_r > p:first-child > a");
                         bean.setUrl(url);
-                        setTags(tags, bean);
+                        setTags(detail, bean);
                         //简介
                         Node descNode = detail.select("div.v_cont").get(0).childNode(1);
                         bean.setDesc(getDescText(descNode));
@@ -135,15 +134,24 @@ public class DescModel implements DescContract.Model {
 //                .replaceAll("&nbsp;", " "));
     }
 
-    public void setTags(Elements tags, AnimeDescHeaderBean bean) {
+    public void setTags(Element detail, AnimeDescHeaderBean bean) {
+        // 找到四个关键字  类型： 地区： 年份： 语言：
+        Elements tags = detail.select("div.v_sd_r > p:first-child > a");
         List<String> tagTitles = new ArrayList<>();
         List<String> tagUrls = new ArrayList<>();
         for (int i = 0; i < tags.size(); i++) {
             if (tags.get(i).attr("href").contains("/class/")) {
                 tagTitles.add(tags.get(i).text().replaceAll(".*()：", ""));
                 tagUrls.add(tags.get(i).attr("href"));
-                tags.remove(i);
-                i--;
+            }else if(tags.get(i).attr("href").contains("/area/")){
+                tagTitles.add(tags.get(i).text().replaceAll(".*()：", ""));
+                tagUrls.add(tags.get(i).attr("href"));
+            }else if(tags.get(i).attr("href").contains("/year/")){
+                tagTitles.add(tags.get(i).text().replaceAll(".*()：", ""));
+                tagUrls.add(tags.get(i).attr("href"));
+            }else if(tags.get(i).attr("href").contains("/lang/")){
+                tagTitles.add(tags.get(i).text().replaceAll(".*()：", ""));
+                tagUrls.add(tags.get(i).attr("href"));
             }
         }
 //        Element bq = tags.get(0);// 类型
@@ -166,15 +174,15 @@ public class DescModel implements DescContract.Model {
 //                }
 //        }
         //类型的数据已经被删除
-        Element dq = tags.get(0);//地区
-        tagTitles.add(dq.text().replaceAll(".*()：", ""));
-        tagUrls.add(dq.select("a").attr("href"));
-        Element nd = tags.get(1);//年度
-        tagTitles.add(nd.text().replaceAll(".*()：", ""));
-        tagUrls.add(nd.select("a").attr("href"));
-        Element zt = tags.get(2);//语言
-        tagTitles.add(zt.text().replaceAll(".*()：", ""));
-        tagUrls.add(zt.select("a").attr("href"));
+//        Element dq = tags.get(0);//地区
+//        tagTitles.add(dq.text().replaceAll(".*()：", ""));
+//        tagUrls.add(dq.select("a").attr("href"));
+//        Element nd = tags.get(1);//年度
+//        tagTitles.add(nd.text().replaceAll(".*()：", ""));
+//        tagUrls.add(nd.select("a").attr("href"));
+//        Element zt = tags.get(2);//语言
+//        tagTitles.add(zt.text().replaceAll(".*()：", ""));
+//        tagUrls.add(zt.select("a").attr("href"));
         bean.setTagTitles(tagTitles);
         bean.setTagUrls(tagUrls);
     }

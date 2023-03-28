@@ -70,6 +70,9 @@ import my.project.silisili.util.SwipeBackLayoutUtil;
 import my.project.silisili.util.Utils;
 import my.project.silisili.util.VideoUtils;
 
+/**
+ * 番剧详情页
+ */
 public class DescActivity extends BaseActivity<DescContract.View, DescPresenter> implements DescContract.View, VideoContract.View {
     @BindView(R.id.details_list)
     RecyclerView detailsRv;
