@@ -39,7 +39,8 @@ public class StartActivity extends BaseActivity {
     }
 
     @Override
-    protected void loadData() {}
+    protected void loadData() {
+    }
 
     @Override
     protected int setLayoutRes() {
@@ -51,9 +52,9 @@ public class StartActivity extends BaseActivity {
         hideGap();
         StatusBarUtil.setTranslucentForCoordinatorLayout(this, 0);
         StatusBarUtil.setTranslucentForImageView(this, 0, coordinatorLayout);
-        SharedPreferencesUtils.setParam(this,"initX5","init");
+        SharedPreferencesUtils.setParam(this, "initX5", "init");
         RelativeLayout.LayoutParams Params = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-        Params.setMargins(0,0,0, Utils.getNavigationBarHeight(this));
+        Params.setMargins(0, 0, 0, Utils.getNavigationBarHeight(this));
         linearLayout.setLayoutParams(Params);
         Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -63,7 +64,8 @@ public class StartActivity extends BaseActivity {
     }
 
     @Override
-    protected void initBeforeView() {}
+    protected void initBeforeView() {
+    }
 
     private void checkUpdate() {
         new HttpGet(Api.CHECK_UPDATE, new Callback() {
@@ -81,7 +83,7 @@ public class StartActivity extends BaseActivity {
                 try {
                     JSONObject obj = new JSONObject(json);
                     String newVersion = obj.getString("tag_name");
-                    if (newVersion.equals(Utils.getASVersionName()))
+                    if (newVersion.compareTo(Utils.getASVersionName()) < 1)
                         runOnUiThread(() -> openMain());
                     else {
                         runOnUiThread(() -> linearLayout.setVisibility(View.GONE));

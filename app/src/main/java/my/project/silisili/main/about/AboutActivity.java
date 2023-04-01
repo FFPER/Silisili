@@ -53,7 +53,7 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.version)
     TextView version;
     private AlertDialog alertDialog;
-    private  String downloadUrl;
+    private String downloadUrl;
     private Call downCall;
     @BindView(R.id.footer)
     LinearLayout footer;
@@ -86,14 +86,14 @@ public class AboutActivity extends BaseActivity {
         SwipeBackLayoutUtil.convertActivityToTranslucent(this);
     }
 
-    public void initToolbar(){
+    public void initToolbar() {
         toolbar.setTitle(Utils.getString(R.string.about));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationOnClickListener(view -> finish());
     }
 
-    private void initViews(){
+    private void initViews() {
         LinearLayout.LayoutParams Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Utils.getNavigationBarHeight(this));
         footer.setLayoutParams(Params);
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) show.getLayoutParams();
@@ -102,17 +102,18 @@ public class AboutActivity extends BaseActivity {
         cache.setText(Environment.getExternalStorageDirectory() + Utils.getString(R.string.cache_text));
     }
 
-    @OnClick({R.id.silisili,R.id.github,R.id.check_update})
+    @OnClick({R.id.silisili, R.id.github, R.id.check_update})
     public void openBrowser(RelativeLayout relativeLayout) {
         switch (relativeLayout.getId()) {
             case R.id.silisili:
                 if (Utils.isFastClick()) Utils.viewInChrome(this, Silisili.DOMAIN);
                 break;
             case R.id.github:
-                if (Utils.isFastClick()) Utils.viewInChrome(this, Utils.getString(R.string.github_url));
+                if (Utils.isFastClick())
+                    Utils.viewInChrome(this, Utils.getString(R.string.github_url));
                 break;
-             case R.id.check_update:
-                 if (Utils.isFastClick()) checkUpdate();
+            case R.id.check_update:
+                if (Utils.isFastClick()) checkUpdate();
                 break;
         }
     }
@@ -136,7 +137,8 @@ public class AboutActivity extends BaseActivity {
                 if (Utils.isFastClick()) showUpdateLogs();
                 break;
             case R.id.open_source:
-                if (Utils.isFastClick()) startActivity(new Intent(AboutActivity.this,OpenSourceActivity.class));
+                if (Utils.isFastClick())
+                    startActivity(new Intent(AboutActivity.this, OpenSourceActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -153,7 +155,7 @@ public class AboutActivity extends BaseActivity {
         builder.setPositiveButton(Utils.getString(R.string.page_positive), null);
         TextView title = new TextView(this);
         title.setText(Utils.getString(R.string.update_log));
-        title.setPadding(30,30,30,30);
+        title.setPadding(30, 30, 30, 30);
         title.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         title.setGravity(Gravity.LEFT);
         title.setTextSize(18);
@@ -196,14 +198,13 @@ public class AboutActivity extends BaseActivity {
             }
 
 
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String json = response.body().string();
                 try {
                     JSONObject obj = new JSONObject(json);
                     String newVersion = obj.getString("tag_name");
-                    if (newVersion.equals(Utils.getASVersionName()))
+                    if (newVersion.compareTo(Utils.getASVersionName()) < 1)
                         runOnUiThread(() -> {
                             Utils.cancelDialog(alertDialog);
                             application.showSnackbarMsg(show, Utils.getString(R.string.no_new_version));
@@ -213,17 +214,17 @@ public class AboutActivity extends BaseActivity {
                         String body = obj.getString("body");
                         runOnUiThread(() -> {
                             Utils.cancelDialog(alertDialog);
-                           Utils.findNewVersion(AboutActivity.this,
-                                   newVersion,
-                                   body,
-                                   (dialog, which) -> {
-                                           dialog.dismiss();
-                                            Utils.putTextIntoClip(downloadUrl);
-                                            application.showSuccessToastMsg(Utils.getString(R.string.url_copied));
-                                            Utils.viewInChrome(AboutActivity.this, downloadUrl);
-                                   },
-                                   (dialog, which) -> dialog.dismiss()
-                                   );
+                            Utils.findNewVersion(AboutActivity.this,
+                                    newVersion,
+                                    body,
+                                    (dialog, which) -> {
+                                        dialog.dismiss();
+                                        Utils.putTextIntoClip(downloadUrl);
+                                        application.showSuccessToastMsg(Utils.getString(R.string.url_copied));
+                                        Utils.viewInChrome(AboutActivity.this, downloadUrl);
+                                    },
+                                    (dialog, which) -> dialog.dismiss()
+                            );
                         });
                     }
                 } catch (JSONException e) {
