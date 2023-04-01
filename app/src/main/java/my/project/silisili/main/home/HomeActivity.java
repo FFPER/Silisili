@@ -47,6 +47,7 @@ import my.project.silisili.main.about.AboutActivity;
 import my.project.silisili.main.animelist.AnimeListActivity;
 import my.project.silisili.main.base.BaseActivity;
 import my.project.silisili.main.favorite.FavoriteActivity;
+import my.project.silisili.main.ranking.RankingActivity;
 import my.project.silisili.main.search.SearchActivity;
 import my.project.silisili.main.setting.SettingActivity;
 import my.project.silisili.main.tag.TagActivity;
@@ -234,6 +235,9 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
                 break;
             case R.id.find_anim:
                 startActivity(new Intent(this, TagActivity.class));
+                break;
+            case R.id.ranking_anim:
+                startActivity(new Intent(this, RankingActivity.class));
                 break;
             case R.id.about:
                 startActivity(new Intent(this, AboutActivity.class));

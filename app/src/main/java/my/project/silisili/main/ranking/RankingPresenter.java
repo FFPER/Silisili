@@ -1,0 +1,42 @@
+package my.project.silisili.main.ranking;
+
+import java.util.LinkedHashMap;
+
+import my.project.silisili.main.base.BasePresenter;
+import my.project.silisili.main.base.Presenter;
+import my.project.silisili.main.home.HomeContract;
+import my.project.silisili.main.home.HomeModel;
+
+public class RankingPresenter extends Presenter<RankingContract.View> implements BasePresenter, RankingContract.LoadDataCallback {
+
+    private RankingContract.View view;
+    private RankingModel model;
+
+    /**
+     * 构造函数
+     *
+     * @param view 需要关联的View
+     */
+    public RankingPresenter(RankingContract.View view) {
+        super(view);
+        this.view = view;
+        model = new RankingModel();
+    }
+
+    @Override
+    public void error(String msg) {
+        view.showLoadErrorView(msg);
+    }
+
+    @Override
+    public void loadData(boolean isMain) {
+        if (isMain)
+            view.showLoadingView();
+        model.getData(this);
+    }
+
+    @Override
+    public void success(LinkedHashMap map) {
+        view.showLoadSuccess(map);
+    }
+}

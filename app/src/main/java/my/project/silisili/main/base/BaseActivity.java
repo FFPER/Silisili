@@ -48,9 +48,15 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        if (!getRunningActivityName().equals("StartActivity")) overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+        if (!getRunningActivityName().equals("StartActivity"))
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
         initBeforeView();
-        setContentView(setLayoutRes());
+        int viewId = setLayoutRes();
+        if (viewId != 0) {
+            setContentView(viewId);
+        } else {
+            setContentView(setLayoutViewBinding());
+        }
         if (Utils.checkHasNavigationBar(this)) {
             if (!getRunningActivityName().equals("PlayerActivity"))
                 getWindow().setFlags(
@@ -103,6 +109,10 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     protected abstract void loadData();
 
     protected abstract int setLayoutRes();
+
+    protected View setLayoutViewBinding() {
+        return null;
+    }
 
     protected abstract void init();
 
@@ -181,7 +191,9 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O;
     }
 
-    public boolean gtSdk30() { return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R; }
+    public boolean gtSdk30() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.R;
+    }
 
     private String getRunningActivityName() {
         String contextString = this.toString();
@@ -199,9 +211,9 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
                 !getRunningActivityName().equals("DefaultNormalWebActivity") &&
                 !getRunningActivityName().equals("NormalWebActivity") &&
                 !getRunningActivityName().equals("DLNAActivity")) {
-        if (gtSdk23()) {
+            if (gtSdk23()) {
                 StatusBarUtil.setColorForSwipeBack(this, getColor(R.color.colorPrimary), 0);
-                if (! isDarkTheme)
+                if (!isDarkTheme)
                     this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             } else
                 StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.colorPrimaryDark), 0);
@@ -252,6 +264,7 @@ public abstract class BaseActivity<V, P extends Presenter<V>> extends AppCompatA
     @Override
     public void finish() {
         super.finish();
-        if (!getRunningActivityName().equals("StartActivity")) overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
+        if (!getRunningActivityName().equals("StartActivity"))
+            overridePendingTransition(R.anim.activity_in, R.anim.activity_out);
     }
 }

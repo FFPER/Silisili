@@ -23,6 +23,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".main.ranking.RankingActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="my.project.silisili.net.OkHttpGlideModule"
             android:value="AppGlideModule" />
@@ -120,9 +124,9 @@
         <service
             android:name=".services.ClearVideoCacheService"
             android:enabled="true"
-            android:exported="true" />
-        <!-- 声明upnp服务实现类（服务） -->
+            android:exported="true" /> <!-- 声明upnp服务实现类（服务） -->
         <service android:name=".cling.service.ClingUpnpService" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="my.project.silisili.fileProvider"
