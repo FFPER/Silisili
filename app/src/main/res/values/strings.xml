@@ -138,6 +138,8 @@
     <string name="disableMsg">不可用</string>
     <string name="tagShortName">动漫分类</string>
     <string name="tagLongName">动漫分类</string>
+    <string name="rankingShortName">排行榜</string>
+    <string name="rankingLongName">排行榜</string>
     <string name="favoriteShortName">我的追番</string>
     <string name="favoriteLongName">我的追番</string>
     <string name="searchShortName">搜索动漫</string>
@@ -190,6 +192,16 @@
     <string-array name="prefix">
         <item>http://</item>
         <item>https://</item>
+    </string-array>
+    <string-array name="ranking_type_array">
+        <item>电影</item>
+        <item>电视剧</item>
+        <item>经典动漫</item>
+    </string-array>
+    <string-array name="ranking_array">
+        <item>总评分</item>
+        <item>月人气</item>
+        <item>周人气</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 

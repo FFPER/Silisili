@@ -34,6 +34,8 @@ public class Silisili extends Application {
     public static String TAG = "%s";
     public String error;
     public JSONObject week = new JSONObject();
+    public JSONObject rankType = new JSONObject();
+    public String rankTypeError;
 
     public static Silisili getInstance() {
         return appContext;
@@ -84,6 +86,7 @@ public class Silisili extends Application {
                     if (arg0) SharedPreferencesUtils.setParam(appContext, "X5State", true);
                     else SharedPreferencesUtils.setParam(appContext, "X5State", false);
                 }
+
                 @Override
                 public void onCoreInitFinished() {
                 }
@@ -93,19 +96,19 @@ public class Silisili extends Application {
         }
     }
 
-    public void showToastMsg(String msg){
+    public void showToastMsg(String msg) {
         Toasty.warning(getApplicationContext(), msg, Toast.LENGTH_LONG, true).show();
     }
 
-    public void showSuccessToastMsg(String msg){
+    public void showSuccessToastMsg(String msg) {
         Toasty.success(getApplicationContext(), msg, Toast.LENGTH_LONG, true).show();
     }
 
-    public void showErrorToastMsg(String msg){
+    public void showErrorToastMsg(String msg) {
         Toasty.error(getApplicationContext(), msg, Toast.LENGTH_LONG, true).show();
     }
 
-    public void showCustomToastMsg(String msg, @DrawableRes int iconRes, @ColorRes int color){
+    public void showCustomToastMsg(String msg, @DrawableRes int iconRes, @ColorRes int color) {
         Toasty.custom(this, msg,
                 iconRes, color, Toast.LENGTH_LONG, true, true).show();
     }

@@ -14,10 +14,10 @@ public interface RankingContract {
     }
 
     interface View extends BaseView {
-        void showLoadSuccess(LinkedHashMap map);
+        void showLoadSuccess(LinkedHashMap<String,Object> map);
     }
 
     interface LoadDataCallback extends BaseLoadDataCallback {
-        void success(LinkedHashMap map);
+        void success(LinkedHashMap<String,Object> map);
     }
 }

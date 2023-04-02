@@ -63,13 +63,6 @@ public class RankingFragment extends LazyFragment2<FragmentRankingBinding> {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_ranking, container, false);
-    }
-
-    @Override
     protected void initData() {
 
     }
