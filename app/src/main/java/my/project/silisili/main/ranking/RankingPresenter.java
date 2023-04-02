@@ -4,13 +4,11 @@ import java.util.LinkedHashMap;
 
 import my.project.silisili.main.base.BasePresenter;
 import my.project.silisili.main.base.Presenter;
-import my.project.silisili.main.home.HomeContract;
-import my.project.silisili.main.home.HomeModel;
 
 public class RankingPresenter extends Presenter<RankingContract.View> implements BasePresenter, RankingContract.LoadDataCallback {
 
-    private RankingContract.View view;
-    private RankingModel model;
+    private final RankingContract.View view;
+    private final RankingModel model;
 
     /**
      * 构造函数
@@ -36,7 +34,7 @@ public class RankingPresenter extends Presenter<RankingContract.View> implements
     }
 
     @Override
-    public void success(LinkedHashMap map) {
+    public void success(LinkedHashMap<String, Object> map) {
         view.showLoadSuccess(map);
     }
 }

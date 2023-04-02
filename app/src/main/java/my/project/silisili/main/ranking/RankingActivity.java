@@ -33,12 +33,12 @@ public class RankingActivity extends BaseActivity<RankingContract.View, RankingP
 
     @Override
     protected RankingPresenter createPresenter() {
-        return null;
+        return new RankingPresenter(this);
     }
 
     @Override
     protected void loadData() {
-
+        mPresenter.loadData(true);
     }
 
     @Override
