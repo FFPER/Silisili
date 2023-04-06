@@ -26,10 +26,13 @@ public abstract class LazyFragment2<T extends ViewBinding> extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         isFirstLoad = true;
         viewBinding = getViewBinding(container);
+        initViews();
         isPrepared = true;
         lazyLoad();
         return viewBinding.getRoot();
     }
+
+    protected abstract void initViews();
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

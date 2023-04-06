@@ -17,7 +17,7 @@ import java.util.Objects;
 import my.project.silisili.R;
 import my.project.silisili.adapter.RankingTypeAdapter;
 import my.project.silisili.bean.Refresh;
-import my.project.silisili.databinding.ActivityRankingBinding;
+import my.project.silisili.databinding.ActivityRankingTypeBinding;
 import my.project.silisili.main.base.BaseActivity;
 import my.project.silisili.util.SwipeBackLayoutUtil;
 import my.project.silisili.util.Utils;
@@ -25,10 +25,10 @@ import my.project.silisili.util.Utils;
 /**
  * 排行榜
  */
-public class RankingActivity extends BaseActivity<RankingContract.View, RankingPresenter> implements RankingContract.View {
-    private ActivityRankingBinding viewBinding;
+public class RankingTypeActivity extends BaseActivity<RankingContract.View, RankingPresenter> implements RankingContract.View {
+    private ActivityRankingTypeBinding viewBinding;
     private int rankingType = 0;// 排行类型的索引
-    private final String[] tabs = Utils.getArray(R.array.ranking_type_array);
+    private final String[] tabs = Utils.getArray(R.array.ranking_array);
     private RankingTypeAdapter adapter;
 
     @Override
@@ -48,7 +48,7 @@ public class RankingActivity extends BaseActivity<RankingContract.View, RankingP
 
     @Override
     protected View setLayoutViewBinding() {
-        viewBinding = ActivityRankingBinding.inflate(getLayoutInflater());
+        viewBinding = ActivityRankingTypeBinding.inflate(getLayoutInflater());
         return viewBinding.getRoot();
     }
 
@@ -68,8 +68,7 @@ public class RankingActivity extends BaseActivity<RankingContract.View, RankingP
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Refresh refresh) {
         if (refresh.getIndex() == 0) {
-            viewBinding.vpRankingType.removeAllViews();
-            removeFragmentTransaction();
+            removeViews();
             mPresenter.loadData(true);
         }
     }
@@ -84,8 +83,7 @@ public class RankingActivity extends BaseActivity<RankingContract.View, RankingP
     public void initSwipe() {
         viewBinding.mSwipeRankingType.setColorSchemeResources(R.color.pink500, R.color.blue500, R.color.purple500);
         viewBinding.mSwipeRankingType.setOnRefreshListener(() -> {
-            viewBinding.vpRankingType.removeAllViews();
-            removeFragmentTransaction();
+            removeViews();
             mPresenter.loadData(true);
         });
     }
@@ -113,6 +111,11 @@ public class RankingActivity extends BaseActivity<RankingContract.View, RankingP
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void removeViews() {
+        viewBinding.vpRankingType.removeAllViews();
+        removeFragmentTransaction();
     }
 
     /**
@@ -183,6 +186,7 @@ public class RankingActivity extends BaseActivity<RankingContract.View, RankingP
                 application.rankTypeError = "";
                 application.rankType = map.get("rankType") == null ? new JSONObject() : (JSONObject) map.get("rankType");
                 setRankingTypeAdapter(rankingType);
+                // TODO: 2023/4/6 看看数据怎么传给子碎片
             }
         });
     }

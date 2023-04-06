@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".main.ranking.RankingActivity">
+    tools:context=".main.ranking.RankingTypeActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -23,9 +23,9 @@
                 android:id="@+id/tab_ranking_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:tabGravity="fill"
+                app:tabGravity="center"
                 app:tabMaxWidth="0dp"
-                app:tabMode="fixed"
+                app:tabMode="scrollable"
                 app:tabSelectedTextColor="@color/tabSelectedTextColor"
                 app:tabTextColor="@color/tabTextColor" />
         </com.google.android.material.appbar.AppBarLayout>

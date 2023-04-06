@@ -307,4 +307,9 @@
     <color name="dark_navigation_color">#303030</color>
     <color name="dark_navigation_text_color">#FFFFFF</color>
     <color name="dark_navigation_tini_color">#ff4081</color>
+
+    <color name="rank_first_color">#FF4A4A</color>
+    <color name="rank_second_color">#FF7701</color>
+    <color name="rank_third_color">#FFB400</color>
+    <color name="rank_other_color">#73c9e5</color>
 </resources>

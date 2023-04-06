@@ -29,7 +29,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class RankingModel implements RankingContract.Model {
-    private static final String[] TABS_TYPE = Utils.getArray(R.array.ranking_type_array);
+    private static final String[] TABS_TYPE = Utils.getArray(R.array.ranking_array);
     private static final String[] TABS = Utils.getArray(R.array.ranking_array);
 
     @Override

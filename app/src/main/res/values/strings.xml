@@ -193,15 +193,16 @@
         <item>http://</item>
         <item>https://</item>
     </string-array>
-    <string-array name="ranking_type_array">
-        <item>电影</item>
-        <item>电视剧</item>
-        <item>经典动漫</item>
-    </string-array>
     <string-array name="ranking_array">
-        <item>总评分</item>
-        <item>月人气</item>
-        <item>周人气</item>
+        <item>电影总评分</item>
+        <item>电视剧总评分</item>
+        <item>动漫总评分</item>
+        <item>电影月人气</item>
+        <item>电视剧月人气</item>
+        <item>动漫月人气</item>
+        <item>电影周人气</item>
+        <item>电视剧周人气</item>
+        <item>动漫周人气</item>
     </string-array>
     <string name="title_activity_settings">Settings</string>
 
