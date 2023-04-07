@@ -19,22 +19,23 @@ public class RankingAdapter extends BaseQuickAdapter<RankingBean, BaseViewHolder
     @Override
     protected void convert(BaseViewHolder helper, RankingBean item) {
         // 修改序号的背景颜色
-        if (item.getIndex() == 1) {
+        int sortIndex = Integer.parseInt(item.getIndex());
+        if (sortIndex == 1) {
             helper.setBackgroundRes(R.id.tv_ranking_index, R.color.rank_first_color);
-        } else if (item.getIndex() == 2) {
+        } else if (sortIndex == 2) {
             helper.setBackgroundRes(R.id.tv_ranking_index, R.color.rank_second_color);
-        } else if (item.getIndex() == 3) {
+        } else if (sortIndex == 3) {
             helper.setBackgroundRes(R.id.tv_ranking_index, R.color.rank_third_color);
         } else {
             helper.setBackgroundRes(R.id.tv_ranking_index, R.color.rank_other_color);
         }
         // 设置序号的值
-        helper.setText(R.id.tv_ranking_index, String.valueOf(item.getIndex()));
+        helper.setText(R.id.tv_ranking_index, item.getIndex());
         // 设置标题的值
-        helper.setText(R.id.tv_ranking_index, String.valueOf(item.getTitle()));
+        helper.setText(R.id.tv_ranking_title, item.getTitle());
         // 设置热度的值
-        helper.setText(R.id.tv_ranking_index, String.valueOf(item.getHeat()));
+        helper.setText(R.id.tv_ranking_heat, item.getHeat());
         // 设置分数的值
-        helper.setText(R.id.tv_ranking_index, String.valueOf(item.getScore()));
+        helper.setText(R.id.tv_ranking_score, item.getScore());
     }
 }

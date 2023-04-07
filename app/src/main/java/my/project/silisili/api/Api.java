@@ -10,6 +10,7 @@ public class Api {
     public static String SEARCH_GET_API = Silisili.DOMAIN + "/vodsearch%s/page/%d/";///vodsearch你/page/3/
 
     public static String TITLE_API = Silisili.DOMAIN + "/vodsearch/class/";//侧滑的第一项的地址
+    public static String RANKING_API = Silisili.DOMAIN + "/map.html";//排行榜地址
     //检测更新
     public final static String CHECK_UPDATE = "https://api.github.com/repos/670848654/Silisili/releases/latest";
 }

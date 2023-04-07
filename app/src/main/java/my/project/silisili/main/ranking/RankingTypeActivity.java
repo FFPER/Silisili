@@ -8,14 +8,15 @@ import androidx.viewpager.widget.ViewPager;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.lang.reflect.Field;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Objects;
 
 import my.project.silisili.R;
 import my.project.silisili.adapter.RankingTypeAdapter;
+import my.project.silisili.bean.RankingBean;
 import my.project.silisili.bean.Refresh;
 import my.project.silisili.databinding.ActivityRankingTypeBinding;
 import my.project.silisili.main.base.BaseActivity;
@@ -28,7 +29,7 @@ import my.project.silisili.util.Utils;
 public class RankingTypeActivity extends BaseActivity<RankingContract.View, RankingPresenter> implements RankingContract.View {
     private ActivityRankingTypeBinding viewBinding;
     private int rankingType = 0;// 排行类型的索引
-    private final String[] tabs = Utils.getArray(R.array.ranking_array);
+    private final String[] tabs = Utils.getArray(R.array.my_ranking_array);
     private RankingTypeAdapter adapter;
 
     @Override
@@ -74,10 +75,10 @@ public class RankingTypeActivity extends BaseActivity<RankingContract.View, Rank
     }
 
     public void initToolbar() {
-        viewBinding.include1.toolbar.setTitle(getResources().getString(R.string.rankingLongName));
-        setSupportActionBar(viewBinding.include1.toolbar);
+        viewBinding.toolbarRanking.setTitle(getResources().getString(R.string.rankingLongName));
+        setSupportActionBar(viewBinding.toolbarRanking);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        viewBinding.include1.toolbar.setNavigationOnClickListener(view -> finish());
+        viewBinding.toolbarRanking.setNavigationOnClickListener(view -> finish());
     }
 
     public void initSwipe() {
@@ -122,9 +123,10 @@ public class RankingTypeActivity extends BaseActivity<RankingContract.View, Rank
      * 初始化分类适配器
      *
      * @param pos 滑动的碎片位置-分类的索引
+     * @param map 集合对象
      */
-    public void setRankingTypeAdapter(int pos) {
-        adapter = new RankingTypeAdapter(getSupportFragmentManager(), viewBinding.tabRankingType.getTabCount());
+    public void setRankingTypeAdapter(int pos, Map<String, ArrayList<RankingBean>> map) {
+        adapter = new RankingTypeAdapter(getSupportFragmentManager(), viewBinding.tabRankingType.getTabCount(), map);
         try {
             Field field = ViewPager.class.getDeclaredField("mRestoredCurItem");
             field.setAccessible(true);
@@ -159,7 +161,6 @@ public class RankingTypeActivity extends BaseActivity<RankingContract.View, Rank
     public void showLoadingView() {
         viewBinding.mSwipeRankingType.setRefreshing(true);
         application.rankTypeError = "";
-        application.rankType = new JSONObject();
     }
 
     @Override
@@ -168,8 +169,7 @@ public class RankingTypeActivity extends BaseActivity<RankingContract.View, Rank
             viewBinding.mSwipeRankingType.setRefreshing(false);
             application.showErrorToastMsg(msg);
             application.rankTypeError = msg;
-            application.rankType = new JSONObject();
-            setRankingTypeAdapter(rankingType);
+            //setRankingTypeAdapter(rankingType, map.get(tabs[rankingType]));
         });
     }
 
@@ -179,15 +179,12 @@ public class RankingTypeActivity extends BaseActivity<RankingContract.View, Rank
     }
 
     @Override
-    public void showLoadSuccess(LinkedHashMap<String, Object> map) {
+    public void showLoadSuccess(Map<String, ArrayList<RankingBean>> map) {
         runOnUiThread(() -> {
             if (!getSupportFragmentManager().isDestroyed()) {
                 viewBinding.mSwipeRankingType.setRefreshing(false);
                 application.rankTypeError = "";
-                application.rankType = map.get("rankType") == null ? new JSONObject() : (JSONObject) map.get("rankType");
-                setRankingTypeAdapter(rankingType);
-                // TODO: 2023/4/6 看看数据怎么传给子碎片
-
+                setRankingTypeAdapter(rankingType, map);
             }
         });
     }

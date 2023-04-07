@@ -193,7 +193,20 @@
         <item>http://</item>
         <item>https://</item>
     </string-array>
+    <!--    原始排序-指的是页面的排列顺序-->
     <string-array name="ranking_array">
+        <item>电影总评分</item>
+        <item>电影月人气</item>
+        <item>电影周人气</item>
+        <item>电视剧总评分</item>
+        <item>电视剧月人气</item>
+        <item>电视剧周人气</item>
+        <item>动漫总评分</item>
+        <item>动漫月人气</item>
+        <item>动漫周人气</item>
+    </string-array>
+    <!--    自定义排序-->
+    <string-array name="my_ranking_array">
         <item>电影总评分</item>
         <item>电视剧总评分</item>
         <item>动漫总评分</item>

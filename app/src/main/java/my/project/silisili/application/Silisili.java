@@ -34,7 +34,6 @@ public class Silisili extends Application {
     public static String TAG = "%s";
     public String error;
     public JSONObject week = new JSONObject();
-    public JSONObject rankType = new JSONObject();
     public String rankTypeError;
 
     public static Silisili getInstance() {

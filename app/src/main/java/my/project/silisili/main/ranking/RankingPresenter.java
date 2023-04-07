@@ -1,7 +1,9 @@
 package my.project.silisili.main.ranking;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.Map;
 
+import my.project.silisili.bean.RankingBean;
 import my.project.silisili.main.base.BasePresenter;
 import my.project.silisili.main.base.Presenter;
 
@@ -34,7 +36,7 @@ public class RankingPresenter extends Presenter<RankingContract.View> implements
     }
 
     @Override
-    public void success(LinkedHashMap<String, Object> map) {
+    public void success(Map<String, ArrayList<RankingBean>> map) {
         view.showLoadSuccess(map);
     }
 }
