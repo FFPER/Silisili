@@ -187,6 +187,7 @@ public class RankingTypeActivity extends BaseActivity<RankingContract.View, Rank
                 application.rankType = map.get("rankType") == null ? new JSONObject() : (JSONObject) map.get("rankType");
                 setRankingTypeAdapter(rankingType);
                 // TODO: 2023/4/6 看看数据怎么传给子碎片
+
             }
         });
     }

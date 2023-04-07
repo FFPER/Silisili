@@ -9,6 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewbinding.ViewBinding;
 
+/**
+ * 使用viewBinding的碎片页面父类
+ *
+ * @param <T> 碎片页面的viewBinding
+ */
 public abstract class LazyFragment2<T extends ViewBinding> extends Fragment {
     private boolean isFragmentVisible;
 

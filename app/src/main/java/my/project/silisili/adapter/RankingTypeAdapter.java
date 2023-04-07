@@ -14,7 +14,7 @@ import my.project.silisili.main.ranking.RankingFragment;
 import my.project.silisili.util.Utils;
 
 /**
- * 排行榜分类的适配器
+ * 排行榜分类(共6类)的适配器
  */
 public class RankingTypeAdapter extends FragmentStatePagerAdapter {
     private static final String[] TABS = Utils.getArray(R.array.ranking_array);
