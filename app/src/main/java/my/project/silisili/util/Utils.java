@@ -135,6 +135,7 @@ public class Utils {
 
     /**
      * 关闭对话框
+     *
      * @param alertDialog
      */
     public static void cancelDialog(AlertDialog alertDialog) {
@@ -144,10 +145,11 @@ public class Utils {
 
     /**
      * 下载进度条
+     *
      * @param context
      * @return
      */
-    public static ProgressDialog showProgressDialog(Context context){
+    public static ProgressDialog showProgressDialog(Context context) {
         final ProgressDialog pd = new ProgressDialog(context);
         pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         pd.setCancelable(false);
@@ -165,7 +167,7 @@ public class Utils {
     public static void selectVideoPlayer(Context context, String url) {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK );
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(Uri.parse(url), "video/*");
         try {
             context.startActivity(Intent.createChooser(intent, "请选择视频播放器"));
@@ -176,14 +178,15 @@ public class Utils {
 
     /**
      * 通过浏览器打开
+     *
      * @param context
      * @param url
      */
-    public static void viewInChrome(Context context, String url){
+    public static void viewInChrome(Context context, String url) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
         //Sets the toolbar color.
         builder.setToolbarColor(context.getResources().getColor(R.color.night));
-        Bitmap closeBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.baseline_close_white_48dp);
+        Bitmap closeBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.baseline_close_white_48dp);
         builder.setCloseButtonIcon(closeBitmap);// 关闭按钮
         builder.setShowTitle(true); //显示网页标题
         CustomTabsIntent customTabsIntent = builder.build();
@@ -194,7 +197,7 @@ public class Utils {
         return getContext().getResources().getString(id);
     }
 
-    public static String[] getArray(@ArrayRes int id){
+    public static String[] getArray(@ArrayRes int id) {
         return getContext().getResources().getStringArray(id);
     }
 
@@ -232,11 +235,11 @@ public class Utils {
         });
     }
 
-    public static void hideKeyboard(View view){
+    public static void hideKeyboard(View view) {
         InputMethodManager imm = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -344,6 +347,7 @@ public class Utils {
 
     /**
      * 滑动返回配置
+     *
      * @return
      */
     public static SlidrConfig defaultInit() {
@@ -361,6 +365,7 @@ public class Utils {
 
     /**
      * 判断当前设备是手机还是平板，代码来自 Google I/O App for Android
+     *
      * @return 平板返回 True，手机返回 False
      */
     public static boolean isPad() {
@@ -369,8 +374,18 @@ public class Utils {
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 
-   /**
+    /**
+     * 判断当前设备是否是竖屏
+     *
+     * @return 竖屏返回 True，横屏返回 False
+     */
+    public static boolean isPortrait() {
+        return getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    /**
      * 设置默认图片
+     *
      * @param context
      * @param url
      * @param imageView
@@ -391,7 +406,7 @@ public class Utils {
                 .apply(options).addListener(new RequestListener<Drawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                      e.printStackTrace();
+                        e.printStackTrace();
                         return false;
                     }
 
@@ -421,7 +436,7 @@ public class Utils {
         textView.setTextColor(context.getResources().getColor(R.color.text_color_primary));
     }
 
-    public static String getASVersionName(){
+    public static String getASVersionName() {
         PackageManager manager = context.getPackageManager();
         String name = null;
         try {
@@ -436,10 +451,11 @@ public class Utils {
 
     /**
      * 删除文件
+     *
      * @param root
      */
     public static void deleteAllFiles(File root) {
-        Log.e("删除文件",root.toString());
+        Log.e("删除文件", root.toString());
         File files[] = root.listFiles();
         if (files != null)
             for (File f : files) {
@@ -463,6 +479,7 @@ public class Utils {
 
     /**
      * 发现新版本弹窗
+     *
      * @param context
      * @param version
      * @param body
@@ -470,10 +487,10 @@ public class Utils {
      * @param negListener
      */
     public static void findNewVersion(Context context,
-                                       String version,
-                                       String body,
-                                       DialogInterface.OnClickListener posListener,
-                                       DialogInterface.OnClickListener negListener) {
+                                      String version,
+                                      String body,
+                                      DialogInterface.OnClickListener posListener,
+                                      DialogInterface.OnClickListener negListener) {
         AlertDialog alertDialog;
         AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.DialogStyle);
         builder.setMessage(body);
@@ -526,6 +543,7 @@ public class Utils {
 
     /**
      * dp转px
+     *
      * @param context
      * @param dp
      * @return
@@ -537,16 +555,18 @@ public class Utils {
 
     /**
      * 将px转换为dp
+     *
      * @param px
      * @return
      */
-    public static int pxTodp(Context context, float px){
+    public static int pxTodp(Context context, float px) {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (px / scale + 0.5);
     }
 
     /**
      * 获取状态栏高度
+     *
      * @return
      */
     public static int getStatusBarHeight() {
@@ -560,12 +580,13 @@ public class Utils {
 
     /**
      * 获取ActionBar 高度
+     *
      * @return
      */
-    public static int getActionBarHeight(){
+    public static int getActionBarHeight() {
         TypedValue tv = new TypedValue();
-        if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize,tv,true)){
-            return  TypedValue.complexToDimensionPixelSize(tv.data,
+        if (getContext().getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true)) {
+            return TypedValue.complexToDimensionPixelSize(tv.data,
                     getContext().getResources().getDisplayMetrics());
         }
         return 0;
@@ -573,6 +594,7 @@ public class Utils {
 
     /**
      * X5内核加载状态
+     *
      * @return
      */
     public static boolean getX5State() {
@@ -581,6 +603,7 @@ public class Utils {
 
     /**
      * 是否启用x5内核
+     *
      * @return
      */
     public static boolean loadX5() {
@@ -589,6 +612,7 @@ public class Utils {
 
     /**
      * 嗅探视频地址集合
+     *
      * @param list
      * @return
      */
@@ -601,10 +625,10 @@ public class Utils {
         return urls;
     }
 
-    public static int screenWidth(Context context){
+    public static int screenWidth(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (wm != null){
+        if (wm != null) {
             wm.getDefaultDisplay().getMetrics(dm);
             return dm.widthPixels;
         }

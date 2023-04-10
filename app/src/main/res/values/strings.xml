@@ -54,6 +54,7 @@
     <string name="open_web_view">解析视频地址失败，尝试使用WebView打开</string>
     <string name="select_video_source">选择播放源</string>
     <string name="open_browser">网页访问</string>
+    <string name="select_source">片源选择</string>
     <!--<string name="no_playlist_error">根据国家相关部门规定\n本动画不准上架</string>-->
     <string name="no_playlist_error">该番剧暂时无法观看。</string>
     <!-- downDialog -->
@@ -171,12 +172,24 @@
     <string name="pause">暂停</string>
     <string name="stop">停止</string>
     <string name="exit">退出</string>
+    <string name="speed">倍速X%s</string>
 
     <string-array name="speed_item">
         <item>5s</item>
         <item>10s</item>
         <item>15s</item>
         <item>30s</item>
+    </string-array>
+
+    <string-array name="speed_array">
+        <item>0.5f</item>
+        <item>0.75f</item>
+        <item>1.0f</item>
+        <item>1.25f</item>
+        <item>1.5f</item>
+        <item>2.0f</item>
+        <item>2.5f</item>
+        <item>3.0f</item>
     </string-array>
 
     <string-array name="week_array">

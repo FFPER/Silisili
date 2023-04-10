@@ -107,7 +107,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
     private boolean isFavorite;
     private VideoPresenter videoPresenter;
     private AnimeDescHeaderBean animeDescHeaderBean = new AnimeDescHeaderBean();
-    private List<String> animeUrlList = new ArrayList();
+    private final ArrayList<String> animeUrlList = new ArrayList<>();
     private List<DownBean> downBeanList;
     private BottomSheetDialog mBottomSheetDialog;
     private AnimeDescDramaAdapter animeDescDramaAdapter;

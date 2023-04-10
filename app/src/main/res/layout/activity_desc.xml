@@ -18,24 +18,6 @@
         android:background="@drawable/desc_gradient"
         android:fitsSystemWindows="true" />
 
-    <!--<com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/translucent"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:elevation="0dp">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/ToolbarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/translucent"
-            android:theme="@style/DescToolbarTheme"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>-->
-
     <my.project.silisili.custom.MySwipeRefreshLayout
         android:id="@+id/mSwipe"
         android:layout_width="match_parent"
@@ -70,8 +52,9 @@
                             android:id="@+id/exit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
+                            android:layout_marginStart="20dp"
                             android:clickable="true"
+                            android:focusable="true"
                             android:src="@drawable/baseline_arrow_back_white_48dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -148,34 +131,34 @@
                                 android:textColor="@color/white"
                                 android:textSize="14sp"
                                 app:iconTint="@color/white"
-                                app:strokeColor="@color/mtrl_btn_stroke_color_selector" />
+                                app:strokeColor="@color/mtrl_btn_stroke_color_selector_1" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/down"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginStart="5dp"
                                 android:text="@string/down"
                                 android:textColor="@color/white"
                                 android:textSize="14sp"
                                 android:visibility="gone"
                                 app:icon="@drawable/baseline_down_white_48dp"
                                 app:iconTint="@color/white"
-                                app:strokeColor="@color/mtrl_btn_stroke_color_selector" />
+                                app:strokeColor="@color/mtrl_btn_stroke_color_selector_1" />
 
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/browser"
                                 style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginStart="5dp"
                                 android:text="@string/open_browser"
                                 android:textColor="@color/white"
                                 android:textSize="14sp"
                                 app:icon="@drawable/baseline_language_white_48dp"
                                 app:iconTint="@color/white"
-                                app:strokeColor="@color/mtrl_btn_stroke_color_selector" />
+                                app:strokeColor="@color/mtrl_btn_stroke_color_selector_1" />
 
                         </LinearLayout>
 
@@ -216,7 +199,6 @@
 
                     </RelativeLayout>
 
-
                 </LinearLayout>
 
                 <!-- 剧集视图 -->
@@ -239,8 +221,11 @@
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="8dp"
-                            android:text="片源选择"
+                            android:layout_marginStart="8dp"
+                            android:gravity="center_vertical"
+                            android:drawableEnd="@android:drawable/ic_media_play"
+                            android:drawablePadding="5dp"
+                            android:text="@string/select_source"
                             android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -252,10 +237,8 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:popupTheme="@style/common_spinner"
-                            android:spinnerMode="dropdown"
-                            app:theme="@style/common_spinner" />
+                            android:spinnerMode="dropdown" />
                     </LinearLayout>
-                    /
                     <!--选集-->
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -267,7 +250,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="8dp"
+                            android:layout_marginStart="8dp"
                             android:text="选集"
                             android:textColor="@color/white"
                             android:textSize="16sp"
@@ -288,17 +271,16 @@
                         android:id="@+id/open_drama"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="right"
+                        android:layout_gravity="end"
                         android:layout_marginTop="4dp"
-                        android:layout_marginRight="4dp">
+                        android:layout_marginEnd="4dp">
 
                         <ImageView
                             android:id="@+id/down_img"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_toRightOf="@id/drama"
+                            android:layout_marginStart="2dp"
+                            android:layout_toEndOf="@id/drama"
                             android:scaleType="centerInside"
                             android:src="@drawable/ic_keyboard_arrow_down_white_48dp"
                             app:tint="@color/white" />
@@ -326,7 +308,7 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
+                        android:layout_marginStart="8dp"
                         android:layout_marginBottom="8dp"
                         android:text="相关推荐"
                         android:textColor="@color/white"

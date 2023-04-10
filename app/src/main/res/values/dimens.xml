@@ -7,4 +7,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>
     <dimen name="sp_16">16sp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="dp_25">25dp</dimen>
 </resources>

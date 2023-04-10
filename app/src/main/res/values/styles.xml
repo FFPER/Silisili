@@ -11,7 +11,7 @@
         <item name="android:textColor">@color/toolbar_color</item>
 
         <!-- New MaterialComponents attributes. -->
-        <item name="itemShapeFillColor">@color/mtrl_navigation_item_background_color</item>
+        <item name="itemShapeFillColor">@color/mtrl_navigation_item_background_color_1</item>
         <item name="colorPrimaryVariant">@color/colorPrimary</item>
         <item name="colorSecondaryVariant">@color/colorPrimary</item>
         <item name="colorSurface">@color/colorPrimary</item>

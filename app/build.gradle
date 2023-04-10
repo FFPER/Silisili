@@ -98,6 +98,8 @@ dependencies {
 //  implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$rootProject.exoplayerVersion"
     implementation "com.google.android.exoplayer:exoplayer-hls:$rootProject.exoplayerVersion"
 //  implementation "com.google.android.exoplayer:exoplayer-ui:$rootProject.exoplayerVersion"
+//    新版 exoplayer 已经被包含到 androidx的media3中
+//    implementation "androidx.media3:media3-exoplayer-hls:$rootProject.$media3_version"
     // Cling library android 投屏方案
     implementation 'org.fourthline.cling:cling-core:2.1.1'
     implementation 'org.fourthline.cling:cling-support:2.1.1'
