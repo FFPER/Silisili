@@ -5,6 +5,8 @@ import android.view.View;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import com.r0adkll.slidr.Slidr;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -20,6 +22,7 @@ import my.project.silisili.bean.RankingBean;
 import my.project.silisili.bean.Refresh;
 import my.project.silisili.databinding.ActivityRankingTypeBinding;
 import my.project.silisili.main.base.BaseActivity;
+import my.project.silisili.util.StatusBarUtil;
 import my.project.silisili.util.SwipeBackLayoutUtil;
 import my.project.silisili.util.Utils;
 
@@ -56,6 +59,8 @@ public class RankingTypeActivity extends BaseActivity<RankingContract.View, Rank
     @Override
     protected void init() {
         EventBus.getDefault().register(this);
+        StatusBarUtil.setColorForSwipeBack(this, getResources().getColor(R.color.colorPrimaryDark), 0);
+        Slidr.attach(this, Utils.defaultInit());
         initToolbar();
         initSwipe();
         initFragment();
