@@ -44,7 +44,6 @@ allprojects {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -69,6 +68,7 @@ dependencies {
     implementation 'com.r0adkll:slidableactivity:2.1.0'
     // butter-knife
     implementation 'com.jakewharton:butterknife:10.2.3'
+    implementation project(path: ':sniffing')
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     // 在用户的默认浏览器中显示网页
     implementation "androidx.browser:browser:1.5.0"
@@ -80,9 +80,12 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:4.15.1"
 //  implementation 'jp.wasabeef:glide-transformations:4.3.0'
     // 通用适配器adapter
+    //noinspection GradleDependency
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
     // 一个基于webview/x5webview的视频嗅探工具
-    implementation 'com.github.fanchen001:Sniffing:1.0.5'
+//    implementation 'com.github.fanchen001:Sniffing:1.0.5'
+    // java 解析网页
+    implementation 'org.jsoup:jsoup:1.15.4'
     // 事务总线
     implementation 'org.greenrobot:eventbus:3.3.1'
     // gson
