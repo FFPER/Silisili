@@ -4,7 +4,7 @@ android {
     compileSdkVersion 33
     defaultConfig {
         applicationId "my.project.silisili"
-        minSdkVersion 26
+        minSdkVersion 21
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 30
         versionCode 17
@@ -45,46 +45,61 @@ allprojects {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.6.0'
-    implementation 'androidx.palette:palette:1.0.0'
-    implementation 'com.google.android.material:material:1.6.0-beta01'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
-    implementation 'pub.devrel:easypermissions:3.0.0'
+    // Material Design 风格的EditText
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
-    implementation 'com.r0adkll:slidableactivity:2.0.5'
-//    butter-knife
+    // 自定义View实现炫酷的主题切换动画- 从开关开始向对角扩散的样式
+    implementation 'com.wuyr:rippleanimation:1.0.0'
+    // 实现类似微博内容，@用户，链接高亮，@用户和链接可点击跳转，可展开和收回的TextView
+    implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1-x'
+    // android  自定义小标签，可点击和拖拽以及长按删除
+    implementation 'co.lujun:androidtagview:1.1.7'
+    // 自定义带图标的吐司
+    implementation 'com.github.GrenderG:Toasty:1.5.2'
+    // 从图片中提取颜色
+    implementation 'androidx.palette:palette:1.0.0'
+    // android 提供的 配置页面的封装
+    implementation 'androidx.preference:preference:1.2.0'
+    // 权限申请
+    implementation 'pub.devrel:easypermissions:3.0.0'
+    // 为activity添加滑动返回功能，只能添加一个方向
+    implementation 'com.r0adkll:slidableactivity:2.1.0'
+    // butter-knife
     implementation 'com.jakewharton:butterknife:10.2.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
-    implementation 'androidx.preference:preference:1.2.0'
-    implementation 'cn.jzvd:jiaozivideoplayer:7.2.0'
-//    implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
-    implementation "com.google.android.exoplayer:exoplayer-core:$rootProject.exoplayerVersion"
-//    implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$rootProject.exoplayerVersion"
-    implementation "com.google.android.exoplayer:exoplayer-hls:$rootProject.exoplayerVersion"
-//    implementation "com.google.android.exoplayer:exoplayer-ui:$rootProject.exoplayerVersion"
-    //    okhttp
+    // 在用户的默认浏览器中显示网页
+    implementation "androidx.browser:browser:1.5.0"
+    // okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-//    glide
+    // glide
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
     implementation 'com.github.bumptech.glide:glide:4.15.1'
     implementation "com.github.bumptech.glide:okhttp3-integration:4.15.1"
-//    implementation 'jp.wasabeef:glide-transformations:4.3.0'
-    implementation "androidx.browser:browser:1.5.0"
+//  implementation 'jp.wasabeef:glide-transformations:4.3.0'
+    // 通用适配器adapter
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'
+    // 一个基于webview/x5webview的视频嗅探工具
     implementation 'com.github.fanchen001:Sniffing:1.0.5'
-    implementation 'com.github.GrenderG:Toasty:1.4.2'
-    implementation 'co.lujun:androidtagview:1.1.7'
-    // Cling library
+    // 事务总线
+    implementation 'org.greenrobot:eventbus:3.3.1'
+    // gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+    // 饺子播放器
+    implementation 'cn.jzvd:jiaozivideoplayer:7.7.0'
+    // Android的应用程序级媒体播放器 最新版本作为 AndroidX Media 的一部分
+//  implementation 'com.google.android.exoplayer:exoplayer:2.18.2'
+    implementation "com.google.android.exoplayer:exoplayer-core:$rootProject.exoplayerVersion"
+//  implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$rootProject.exoplayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-hls:$rootProject.exoplayerVersion"
+//  implementation "com.google.android.exoplayer:exoplayer-ui:$rootProject.exoplayerVersion"
+    // Cling library android 投屏方案
     implementation 'org.fourthline.cling:cling-core:2.1.1'
     implementation 'org.fourthline.cling:cling-support:2.1.1'
-    // Jetty library
+    // Jetty library 提供了一个Web服务器和servlet容器，另外还提供对HTTP/2，WebSocket的支持。与cling投屏配合使用
     implementation 'org.eclipse.jetty:jetty-server:8.1.22.v20160922'
     implementation 'org.eclipse.jetty:jetty-servlet:8.1.22.v20160922'
     implementation 'org.eclipse.jetty:jetty-client:8.1.22.v20160922'
-    implementation 'com.wuyr:rippleanimation:1.0.0'
-    implementation 'com.github.MZCretin:ExpandableTextView:v1.6.1-x'
-    implementation 'org.greenrobot:eventbus:3.3.1'
-    implementation 'com.google.code.gson:gson:2.10.1'
 }

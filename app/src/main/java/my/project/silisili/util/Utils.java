@@ -43,7 +43,6 @@ import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.cardview.widget.CardView;
 import androidx.palette.graphics.Palette;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.GlideException;
@@ -64,7 +63,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import my.project.silisili.BuildConfig;
 import my.project.silisili.R;
 import my.project.silisili.application.Silisili;
 import my.project.silisili.net.GlideApp;
@@ -594,8 +592,8 @@ public class Utils {
      * @param list
      * @return
      */
-    public static List ridRepeat(List<SniffingVideo> list) {
-        List<String> urls = new ArrayList();
+    public static List<String> ridRepeat(List<SniffingVideo> list) {
+        List<String> urls = new ArrayList<>();
         for (SniffingVideo sniffingVideo : list) {
             if (!urls.contains(sniffingVideo.getUrl()) && !sniffingVideo.getUrl().startsWith("mp4"))
                 urls.add(sniffingVideo.getUrl());

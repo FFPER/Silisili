@@ -194,7 +194,7 @@ public class DescModel implements DescContract.Model {
      * @param els
      */
     public void setPlayData(String type, Elements els) {
-        List<AnimeDescDetailsBean> animeDescDetailsBeans = new ArrayList<>();
+        ArrayList<AnimeDescDetailsBean> animeDescDetailsBeans = new ArrayList<>();
         int k = 0;
         boolean select;
         for (int i = 0; i < els.size(); i++) {

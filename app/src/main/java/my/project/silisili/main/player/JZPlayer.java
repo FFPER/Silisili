@@ -21,6 +21,9 @@ import my.project.silisili.R;
 import my.project.silisili.cling.ui.DLNAActivity;
 import my.project.silisili.util.SharedPreferencesUtils;
 
+/**
+ * 使用饺子播放器
+ */
 public class JZPlayer extends JzvdStd {
     private Context context;
     private CompleteListener listener;
@@ -32,7 +35,9 @@ public class JZPlayer extends JzvdStd {
     public TextView tvSpeed, snifferBtn, openDrama, preVideo, nextVideo;
     public int currentSpeedIndex = 1;
 
-    public JZPlayer(Context context) { super(context); }
+    public JZPlayer(Context context) {
+        super(context);
+    }
 
     public JZPlayer(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -287,7 +292,7 @@ public class JZPlayer extends JzvdStd {
         tvSpeed.setText("倍数X" + getSpeedFromIndex(currentSpeedIndex));
     }
 
-    public interface  CompleteListener{
+    public interface CompleteListener {
         void complete();
     }
 
@@ -305,11 +310,13 @@ public class JZPlayer extends JzvdStd {
         batteryTimeLayout.setVisibility(GONE);
     }
 
-    public void startPIP(){ changeUiToPlayingClear(); }
+    public void startPIP() {
+        changeUiToPlayingClear();
+    }
 
     @Override
-    public void onAutoCompletion() {
-        onStateAutoComplete();
+    public void onStateAutoComplete() {
+        super.onStateAutoComplete();
         listener.complete();
     }
 

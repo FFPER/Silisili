@@ -12,15 +12,14 @@ import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -29,9 +28,10 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoListener;
 
@@ -39,6 +39,9 @@ import cn.jzvd.JZMediaInterface;
 import cn.jzvd.Jzvd;
 import my.project.silisili.R;
 
+/**
+ * 饺子播放器的内核-使用ExoPlayer
+ */
 public class JZExoPlayer extends JZMediaInterface implements Player.EventListener, VideoListener {
     private SimpleExoPlayer simpleExoPlayer;
     private Runnable callback;
@@ -62,43 +65,47 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
         release();
         mMediaHandlerThread = new HandlerThread("JZVD");
         mMediaHandlerThread.start();
-        mMediaHandler = new Handler(mMediaHandlerThread.getLooper());//主线程还是非主线程，就在这里
+        mMediaHandler = new Handler(context.getMainLooper());//主线程还是非主线程，就在这里
         handler = new Handler();
         mMediaHandler.post(() -> {
-            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+
             TrackSelection.Factory videoTrackSelectionFactory =
-                    new AdaptiveTrackSelection.Factory(bandwidthMeter);
+                    new AdaptiveTrackSelection.Factory();
             TrackSelector trackSelector =
-                    new DefaultTrackSelector(videoTrackSelectionFactory);
+                    new DefaultTrackSelector(context, videoTrackSelectionFactory);
 
-            LoadControl loadControl = new DefaultLoadControl(new DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE),
-                    360000, 600000, 1000, 5000,
-                    C.LENGTH_UNSET,
-                    false);
+            LoadControl loadControl = new DefaultLoadControl.Builder()
+                    .setAllocator(new DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE))
+                    .setBufferDurationsMs(360000, 600000, 1000, 5000)
+                    .setPrioritizeTimeOverSizeThresholds(false)
+                    .setTargetBufferBytes(C.LENGTH_UNSET)
+                    .createDefaultLoadControl();
 
+
+            BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter.Builder(context).build();
             // 2. Create the player
 
             RenderersFactory renderersFactory = new DefaultRenderersFactory(context);
-            simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(context, renderersFactory, trackSelector, loadControl);
+            simpleExoPlayer = new SimpleExoPlayer.Builder(context, renderersFactory)
+                    .setTrackSelector(trackSelector)
+                    .setLoadControl(loadControl)
+                    .setBandwidthMeter(bandwidthMeter)
+                    .build();
             // Produces DataSource instances through which media data is loaded.
-/*            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, context.getResources().getString(R.string.app_name)));*/
+            DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
+                    Util.getUserAgent(context, context.getResources().getString(R.string.app_name)));
 
             String currUrl = jzvd.jzDataSource.getCurrentUrl().toString();
             MediaSource videoSource;
-            DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(
-                    Util.getUserAgent(context, context.getResources().getString(R.string.app_name)),
-                    null,
-                    1500,
-                    1500,
-                    true /* allowCrossProtocolRedirects */
-            );
-
             if (currUrl.contains(".m3u8")) {
-                videoSource = new HlsMediaSource.Factory(httpDataSourceFactory)
-                        .createMediaSource(Uri.parse(currUrl), handler, null);
+                videoSource = new HlsMediaSource.Factory(dataSourceFactory)
+                        .createMediaSource(Uri.parse(currUrl));
+                //addEventListener 这里只有两个参数都要传入值才可以成功设置
+                // 否者会被断言 Assertions.checkArgument(handler != null && eventListener != null);
+                // 并且报错  IllegalArgumentException()  所以不需要添加监听器时 注释掉
+                //      videoSource .addEventListener( handler, null);
             } else {
-                videoSource = new ExtractorMediaSource.Factory(httpDataSourceFactory)
+                videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                         .createMediaSource(Uri.parse(currUrl));
             }
             simpleExoPlayer.addVideoListener(this);
@@ -106,7 +113,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
             Log.e(TAG, "URL Link = " + currUrl);
 
             simpleExoPlayer.addListener(this);
-            Boolean isLoop = jzvd.jzDataSource.looping;
+            boolean isLoop = jzvd.jzDataSource.looping;
             if (isLoop) {
                 simpleExoPlayer.setRepeatMode(Player.REPEAT_MODE_ONE);
             } else {
@@ -116,14 +123,19 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
             simpleExoPlayer.setPlayWhenReady(true);
             callback = new onBufferingUpdate();
 
-            simpleExoPlayer.setVideoSurface(new Surface(jzvd.textureView.getSurfaceTexture()));
+            if (jzvd.textureView != null) {
+                SurfaceTexture surfaceTexture = jzvd.textureView.getSurfaceTexture();
+                if (surfaceTexture != null) {
+                    simpleExoPlayer.setVideoSurface(new Surface(surfaceTexture));
+                }
+            }
         });
 
     }
 
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
-        handler.post(() -> jzvd.onVideoSizeChanged(width, height));
+        handler.post(() -> jzvd.onVideoSizeChanged((int) (width * pixelWidthHeightRatio), height));
     }
 
     @Override
@@ -143,10 +155,17 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
 
     @Override
     public void seekTo(long time) {
+        if (simpleExoPlayer == null) {
+            return;
+        }
         if (time != previousSeek) {
+            if (time >= simpleExoPlayer.getBufferedPosition()) {
+                jzvd.onStatePreparingPlaying();
+            }
             simpleExoPlayer.seekTo(time);
             previousSeek = time;
             jzvd.seekToInAdvance = time;
+
         }
     }
 
@@ -221,6 +240,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
                 }
                 break;
                 case Player.STATE_BUFFERING: {
+                    jzvd.onStatePreparingPlaying();
                     handler.post(callback);
                 }
                 break;
@@ -232,7 +252,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
                 }
                 break;
                 case Player.STATE_ENDED: {
-                    jzvd.onAutoCompletion();
+                    jzvd.onCompletion();
                 }
                 break;
             }
@@ -272,7 +292,11 @@ public class JZExoPlayer extends JZMediaInterface implements Player.EventListene
 
     @Override
     public void setSurface(Surface surface) {
-        simpleExoPlayer.setVideoSurface(surface);
+        if (simpleExoPlayer != null) {
+            simpleExoPlayer.setVideoSurface(surface);
+        } else {
+            Log.e("AGVideo", "simpleExoPlayer为空");
+        }
     }
 
     @Override

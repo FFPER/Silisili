@@ -49,6 +49,9 @@ import my.project.silisili.util.StatusBarUtil;
 import my.project.silisili.util.Utils;
 import my.project.silisili.util.VideoUtils;
 
+/**
+ * 播放页面
+ */
 public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener, JZPlayer.TouchListener, JZPlayer.ShowOrHideChangeViewListener, SniffingUICallback {
     @BindView(R.id.player)
     JZPlayer player;
@@ -122,7 +125,11 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         //源地址
         siliUrl = bundle.getString("sili");
         //剧集list
-        list =  (List<AnimeDescDetailsBean>) bundle.getSerializable("list");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            list = bundle.getParcelableArrayList("list", AnimeDescDetailsBean.class);
+        } else {
+            list = bundle.getParcelableArrayList("list");
+        }
         //当前播放剧集下标
         clickIndex = bundle.getInt("clickIndex");
         //禁止冒泡
@@ -145,13 +152,13 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
             @Override
             public void onDrawerOpened(@NonNull View drawerView) {
                 if (drawerLayout.isDrawerOpen(GravityCompat.START))
-                    player.goOnPlayOnPause();
+                    Jzvd.goOnPlayOnPause();
             }
 
             @Override
             public void onDrawerClosed(@NonNull View drawerView) {
                 if (!drawerLayout.isDrawerOpen(GravityCompat.START))
-                    player.goOnPlayOnResume();
+                    Jzvd.goOnPlayOnResume();
             }
 
             @Override
@@ -199,8 +206,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
             drawerLayout.closeDrawer(GravityCompat.START);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             new Handler().postDelayed(this::enterPicInPic, 500);
-        }else{
-            Toast.makeText(this,R.string.picture_in_picture_title,Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, R.string.picture_in_picture_title, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -219,19 +226,21 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     private void setPlayerPreNextTag() {
         hasPreVideo = clickIndex != 0;
-        player.preVideo.setText(hasPreVideo ? String.format(PREVIDEOSTR, list.get(clickIndex-1).getTitle()) : "");
+        player.preVideo.setText(hasPreVideo ? String.format(PREVIDEOSTR, list.get(clickIndex - 1).getTitle()) : "");
         hasNextVideo = clickIndex != list.size() - 1;
-        player.nextVideo.setText(hasNextVideo ? String.format(NEXTVIDEOSTR, list.get(clickIndex+1).getTitle()) : "");
+        player.nextVideo.setText(hasNextVideo ? String.format(NEXTVIDEOSTR, list.get(clickIndex + 1).getTitle()) : "");
     }
 
     private void changePlayUrl(int position) {
         clickIndex = position;
         setPlayerPreNextTag();
-        AnimeDescDetailsBean bean = (AnimeDescDetailsBean) dramaAdapter.getItem(position);
+        AnimeDescDetailsBean bean = dramaAdapter.getItem(position);
         Jzvd.releaseAllVideos();
         alertDialog = Utils.getProDialog(PlayerActivity.this, R.string.parsing);
         MaterialButton materialButton = (MaterialButton) dramaAdapter.getViewByPosition(recyclerView, position, R.id.tag_group);
+        assert materialButton != null;
         materialButton.setTextColor(getResources().getColor(R.color.tabSelectedTextColor));
+        assert bean != null;
         bean.setSelected(true);
         EventBus.getDefault().post(new Event(position));
         siliUrl = VideoUtils.getSiliUrl(bean.getUrl());
@@ -243,7 +252,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     /**
      * 播放视频
-     * @param animeUrl
+     *
+     * @param animeUrl 页面地址
      */
     private void playAnime(String animeUrl) {
         cancelDialog();
@@ -269,7 +279,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     /**
      * 嗅探视频真实连接
-     * @param animeUrl
+     *
+     * @param animeUrl 页面地址
      */
     private void snifferPlayUrl(String animeUrl) {
         alertDialog = Utils.getProDialog(PlayerActivity.this, R.string.should_be_used_web);
@@ -291,7 +302,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                 setUserSpeedConfig(speeds[3], 3);
                 break;
         }
-        switchCompat.setChecked((Boolean) SharedPreferencesUtils.getParam(this, "hide_progress", false));
+        switchCompat.setChecked((boolean) SharedPreferencesUtils.getParam(this, "hide_progress", false));
         switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
             SharedPreferencesUtils.setParam(this, "hide_progress", isChecked);
         });
@@ -332,19 +343,15 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 
     @OnClick({R.id.speed_config, R.id.pic_config, R.id.player_config, R.id.browser_config})
     public void configBtnClick(RelativeLayout relativeLayout) {
-        switch (relativeLayout.getId()) {
-            case R.id.speed_config:
-                setDefaultSpeed();
-                break;
-            case R.id.pic_config:
-                if (gtSdk26()) startPic();
-                break;
-            case R.id.player_config:
-                Utils.selectVideoPlayer(this, url);
-                break;
-            case R.id.browser_config:
-                Utils.viewInChrome(this, siliUrl);
-                break;
+        int id = relativeLayout.getId();
+        if (id == R.id.speed_config) {
+            setDefaultSpeed();
+        } else if (id == R.id.pic_config) {
+            if (gtSdk26()) startPic();
+        } else if (id == R.id.player_config) {
+            Utils.selectVideoPlayer(this, url);
+        } else if (id == R.id.browser_config) {
+            Utils.viewInChrome(this, siliUrl);
         }
     }
 
@@ -360,14 +367,14 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     @Override
     protected void onPause() {
         super.onPause();
-        player.goOnPlayOnPause();
+        Jzvd.goOnPlayOnPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         hideNavBar();
-        if (!inMultiWindow()) player.goOnPlayOnResume();
+        if (!inMultiWindow()) Jzvd.goOnPlayOnResume();
     }
 
     @Override
@@ -379,7 +386,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     /**
      * 是否为分屏模式
      *
-     * @return
+     * @return 是否为分屏模式
      */
     public boolean inMultiWindow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) return this.isInMultiWindowMode();
@@ -404,20 +411,24 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
     }
 
     @Override
-    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
-        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, @NonNull Configuration newConfig) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+        }
         if (isInPictureInPictureMode) {
             player.startPIP();
             isPip = true;
-            player.goOnPlayOnResume();
+            Jzvd.goOnPlayOnResume();
         } else isPip = false;
     }
 
     @Override
-    public void onMultiWindowModeChanged(boolean isInMultiWindowMode, Configuration newConfig) {
-        super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig);
+    public void onMultiWindowModeChanged(boolean isInMultiWindowMode, @NonNull Configuration newConfig) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig);
+        }
         if (isInMultiWindowMode)
-            player.goOnPlayOnResume();
+            Jzvd.goOnPlayOnResume();
     }
 
     @Override

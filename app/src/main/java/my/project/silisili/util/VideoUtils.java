@@ -8,7 +8,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import my.project.silisili.R;
@@ -27,7 +27,7 @@ public class VideoUtils {
      * @param context
      * @param list
      * @param listener
-     * @param type 0 old 1 new
+     * @param type     0 old 1 new
      */
     public static void showMultipleVideoSources(Context context,
                                                 List<String> list,
@@ -59,13 +59,13 @@ public class VideoUtils {
      * @param clickIndex
      */
     public static void openPlayer(boolean isDescActivity, Activity activity, String witchTitle, String url, String animeTitle, String siliUrl,
-                                  List<AnimeDescDetailsBean> list, int clickIndex) {
+                                  ArrayList<AnimeDescDetailsBean> list, int clickIndex) {
         Bundle bundle = new Bundle();
         bundle.putString("title", witchTitle);
         bundle.putString("url", url);
         bundle.putString("animeTitle", animeTitle);
         bundle.putString("sili", siliUrl);
-        bundle.putSerializable("list", (Serializable) list);
+        bundle.putParcelableArrayList("list", list);
         bundle.putInt("clickIndex", clickIndex);
         Silisili.destoryActivity("player");
         if (isDescActivity)
@@ -94,8 +94,8 @@ public class VideoUtils {
      */
     public static void openDefaultWebview(Activity activity, String url) {
         if (Utils.loadX5())
-            activity.startActivity(new Intent(activity, DefaultX5WebActivity.class).putExtra("url",url));
+            activity.startActivity(new Intent(activity, DefaultX5WebActivity.class).putExtra("url", url));
         else
-            activity.startActivity(new Intent(activity, DefaultNormalWebActivity.class).putExtra("url",url));
+            activity.startActivity(new Intent(activity, DefaultNormalWebActivity.class).putExtra("url", url));
     }
 }

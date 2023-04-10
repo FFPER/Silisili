@@ -10,7 +10,7 @@ public class AnimeDescBean implements Serializable {
     // 播放列表集合
 //    private List<AnimeDescDetailsBean> animeDescDetailsBeans = new ArrayList<>();
     // 播放列表集合
-    private Map<String, List<AnimeDescDetailsBean>> animeDescDetailsBeans = new HashMap<>();
+    private Map<String, ArrayList<AnimeDescDetailsBean>> animeDescDetailsBeans = new HashMap<>();
     // 番剧推荐集合
     private List<AnimeDescRecommendBean> animeDescRecommendBeans = new ArrayList<>();
 
@@ -22,7 +22,7 @@ public class AnimeDescBean implements Serializable {
 //        this.animeDescDetailsBeans = animeDescDetailsBeans;
 //    }
 
-    public Map<String, List<AnimeDescDetailsBean>> getAnimeDescDetailsBeans2() {
+    public Map<String, ArrayList<AnimeDescDetailsBean>> getAnimeDescDetailsBeans2() {
         return animeDescDetailsBeans;
     }
 
@@ -32,15 +32,15 @@ public class AnimeDescBean implements Serializable {
     }
 
 
-    public List<AnimeDescDetailsBean> getAnimeDescDetailsBeans(String key) {
+    public ArrayList<AnimeDescDetailsBean> getAnimeDescDetailsBeans(String key) {
         return animeDescDetailsBeans.containsKey(key) ? animeDescDetailsBeans.get(key) : new ArrayList<>();
     }
 
-    public void setAnimeDescDetailsBeans(Map<String, List<AnimeDescDetailsBean>> animeDescDetailsBeans) {
+    public void setAnimeDescDetailsBeans(Map<String, ArrayList<AnimeDescDetailsBean>> animeDescDetailsBeans) {
         this.animeDescDetailsBeans = animeDescDetailsBeans;
     }
 
-    public void addAnimeDescDetailsBeans(String type, List<AnimeDescDetailsBean> animeDescDetailsBeans) {
+    public void addAnimeDescDetailsBeans(String type, ArrayList<AnimeDescDetailsBean> animeDescDetailsBeans) {
         this.animeDescDetailsBeans.put(type, animeDescDetailsBeans);
     }
 
