@@ -460,3 +460,23 @@
 -dontwarn com.squareup.okhttp3.**
 -keep class com.squareup.okhttp3.** { *;}
 -dontwarn okio.**
+# Please add these rules to your existing keep rules in order to suppress warnings.
+# This is generated automatically by the Android Gradle plugin.
+-dontwarn com.google.j2objc.annotations.RetainedWith
+-dontwarn com.google.j2objc.annotations.Weak
+-dontwarn com.sun.net.httpserver.HttpContext
+-dontwarn com.sun.net.httpserver.HttpHandler
+-dontwarn com.sun.net.httpserver.HttpServer
+-dontwarn javax.enterprise.context.ApplicationScoped
+-dontwarn javax.enterprise.inject.Alternative
+-dontwarn javax.inject.Inject
+-dontwarn org.bouncycastle.jsse.BCSSLParameters
+-dontwarn org.bouncycastle.jsse.BCSSLSocket
+-dontwarn org.bouncycastle.jsse.provider.BouncyCastleJsseProvider
+-dontwarn org.conscrypt.Conscrypt$Version
+-dontwarn org.conscrypt.Conscrypt
+-dontwarn org.conscrypt.ConscryptHostnameVerifier
+-dontwarn org.openjsse.javax.net.ssl.SSLParameters
+-dontwarn org.openjsse.javax.net.ssl.SSLSocket
+-dontwarn org.openjsse.net.ssl.OpenJSSE
+-dontwarn sun.net.www.protocol.http.Handler
