@@ -219,6 +219,9 @@ public class JZExoPlayer extends JZMediaInterface implements Player.Listener {
 
     @Override
     public void setSpeed(float speed) {
+        if (exoPlayer == null) {
+            return;
+        }
         PlaybackParameters playbackParameters = new PlaybackParameters(speed, 1.0F);
         exoPlayer.setPlaybackParameters(playbackParameters);
     }
@@ -246,6 +249,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.Listener {
         Player.Listener.super.onPlayWhenReadyChanged(playWhenReady, reason);
         Log.e(TAG, "onPlayWhenReadyChanged：" + playWhenReady);
         if (playWhenReady) {
+            jzvd.onPrepared();
             jzvd.onStatePlaying();
         }
     }

@@ -121,7 +121,7 @@ public class StartActivity extends BaseActivity {
     }
 
     private void openMain() {
-        boolean isTest = true;
+        boolean isTest = false;
         if (isTest) {
             openPlayer();
         } else {

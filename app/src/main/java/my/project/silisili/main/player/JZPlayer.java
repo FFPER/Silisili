@@ -8,18 +8,20 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
 
 import cn.jzvd.JZDataSource;
 import cn.jzvd.JZUtils;
 import cn.jzvd.JzvdStd;
 import my.project.silisili.R;
 import my.project.silisili.cling.ui.DLNAActivity;
-import my.project.silisili.custom.PopupWindow;
 import my.project.silisili.util.SharedPreferencesUtils;
 import my.project.silisili.util.Utils;
 
@@ -34,12 +36,10 @@ public class JZPlayer extends JzvdStd {
     private ImageView ibLock;
     private boolean locked = false;
     public ImageView fastForward, quickRetreat, config, airplay;
-    public TextView tvSpeed, snifferBtn, openDrama, preVideo, nextVideo;
-    private final int DEFAULT_SPEED_INDEX = 2;
+    public TextView snifferBtn, openDrama, preVideo, nextVideo;
+    public AppCompatSpinner spinnerSpeed;
+    public static final int DEFAULT_SPEED_INDEX = 2;
     public int currentSpeedIndex = DEFAULT_SPEED_INDEX;
-    //    速度选择弹出框
-    private PopupWindow infoPopupWindow;
-    private String[] speedArray;
 
     public JZPlayer(Context context) {
         super(context);
@@ -72,8 +72,8 @@ public class JZPlayer extends JzvdStd {
         fastForward = findViewById(R.id.fast_forward);
         fastForward.setOnClickListener(this);
         config = findViewById(R.id.config);
-        tvSpeed = findViewById(R.id.tvSpeed);
-        tvSpeed.setOnClickListener(this);
+        spinnerSpeed = findViewById(R.id.spinnerSpeed);
+//        spinnerSpeed.setOnClickListener(this);
         airplay = findViewById(R.id.airplay);
         airplay.setOnClickListener(this);
         snifferBtn = findViewById(R.id.sniffer_btn);
@@ -81,17 +81,24 @@ public class JZPlayer extends JzvdStd {
         preVideo = findViewById(R.id.pre_video);
         nextVideo = findViewById(R.id.next_video);
         // 倍速候选项
-        speedArray = Utils.getArray(R.array.speed_array);
+        String[] speedArray = Utils.getArray(R.array.speed_array);
         // 速度选择弹框
-        infoPopupWindow = new PopupWindow(context);
-        infoPopupWindow.setAnchorView(tvSpeed);
-        infoPopupWindow.setItemData(speedArray);
-        infoPopupWindow.setModal(true);
-        infoPopupWindow.setOnSelectedListener((position, text) -> {
-            infoPopupWindow.hide();
-            currentSpeedIndex = position;
-            mediaInterface.setSpeed(Float.parseFloat(text));
-            tvSpeed.setText(context.getString(R.string.speed, text));
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(context, R.layout.item_spinner_source, speedArray);
+        spinnerSpeed.setAdapter(spinnerAdapter);
+        //设置下拉框的宽度 为屏幕宽度
+//        spinnerSpeed.setDropDownWidth(Utils.screenWidth(context));
+        spinnerSpeed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentSpeedIndex = position;
+                String speed = speedArray[position];
+                mediaInterface.setSpeed(Float.parseFloat(speed.substring(0, speed.length() - 1)));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
         });
     }
 
@@ -134,9 +141,11 @@ public class JZPlayer extends JzvdStd {
             } else {
                 mediaInterface.seekTo(0);
             }
-        } else if (viewId == R.id.tvSpeed) {
-            infoPopupWindow.show();
-        } else if (viewId == R.id.airplay) {
+        }
+//        else if (viewId == R.id.spinnerSpeed) {
+//            infoPopupWindow.show();
+//        }
+        else if (viewId == R.id.airplay) {
             Bundle bundle = new Bundle();
             Log.e("duration", getDuration() + "");
             Log.e("playUrl", jzDataSource.getCurrentUrl().toString());
@@ -264,7 +273,7 @@ public class JZPlayer extends JzvdStd {
     public void setScreenFullscreen() {
         super.setScreenFullscreen();
         fullscreenButton.setImageResource(R.drawable.baseline_view_selections_white_48dp);
-        tvSpeed.setText(context.getString(R.string.speed, speedArray[currentSpeedIndex]));
+        spinnerSpeed.setSelection(currentSpeedIndex);
     }
 
     public interface CompleteListener {

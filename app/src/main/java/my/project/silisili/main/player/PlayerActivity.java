@@ -28,7 +28,6 @@ import com.google.android.material.button.MaterialButton;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,7 +52,6 @@ import my.project.silisili.util.VideoUtils;
  * 播放页面
  */
 public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener, JZPlayer.TouchListener, JZPlayer.ShowOrHideChangeViewListener, SniffingUICallback {
-    private static final int DEFAULT_SPEED_INDEX = 2;
     @BindView(R.id.player)
     JZPlayer player;
     private String witchTitle, url, siliUrl;
@@ -186,8 +184,8 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
         // 加载视频失败，嗅探视频
         player.snifferBtn.setOnClickListener(v -> snifferPlayUrl(url));
         picConfig.setVisibility(View.VISIBLE);
-        if (gtSdk23()) player.tvSpeed.setVisibility(View.VISIBLE);
-        else player.tvSpeed.setVisibility(View.GONE);
+        if (gtSdk23()) player.spinnerSpeed.setVisibility(View.VISIBLE);
+        else player.spinnerSpeed.setVisibility(View.GONE);
         player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
         player.fullscreenButton.setOnClickListener(view -> {
             if (!Utils.isFastClick()) return;
@@ -273,7 +271,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                 break;
         }*/
         Jzvd.releaseAllVideos();
-        player.currentSpeedIndex = DEFAULT_SPEED_INDEX;
+        player.currentSpeedIndex = JZPlayer.DEFAULT_SPEED_INDEX;
         player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
         player.startVideo();
     }
@@ -454,7 +452,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 //            SniffingUtil.get().activity(this).referer(iframeUrl).callback(this).url(iframeUrl).start();
             url = iframeUrl;
             Jzvd.releaseAllVideos();
-            player.currentSpeedIndex = DEFAULT_SPEED_INDEX;
+            player.currentSpeedIndex = JZPlayer.DEFAULT_SPEED_INDEX;
             player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
             player.startVideo();
         });

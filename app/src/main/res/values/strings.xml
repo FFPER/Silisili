@@ -182,14 +182,13 @@
     </string-array>
 
     <string-array name="speed_array">
-        <item>0.5f</item>
-        <item>0.75f</item>
-        <item>1.0f</item>
-        <item>1.25f</item>
-        <item>1.5f</item>
-        <item>2.0f</item>
-        <item>2.5f</item>
-        <item>3.0f</item>
+        <item>0.5X</item>
+        <item>0.75X</item>
+        <item>1.0X</item>
+        <item>1.25X</item>
+        <item>1.5X</item>
+        <item>2.0X</item>
+        <item>3.0X</item>
     </string-array>
 
     <string-array name="week_array">
