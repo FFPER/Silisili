@@ -53,16 +53,17 @@ import my.project.silisili.util.VideoUtils;
  * 播放页面
  */
 public class PlayerActivity extends BaseActivity implements VideoContract.View, JZPlayer.CompleteListener, JZPlayer.TouchListener, JZPlayer.ShowOrHideChangeViewListener, SniffingUICallback {
+    private static final int DEFAULT_SPEED_INDEX = 2;
     @BindView(R.id.player)
     JZPlayer player;
     private String witchTitle, url, siliUrl;
     @BindView(R.id.rv_list)
     RecyclerView recyclerView;
-    private List<AnimeDescDetailsBean> list = new ArrayList<>();
+    private List<AnimeDescDetailsBean> list;
     private AnimeDescDramaAdapter dramaAdapter;
     private AlertDialog alertDialog;
     private String animeTitle;
-    @BindView(R.id.nav_view)
+    @BindView(value = R.id.nav_view)
     LinearLayout linearLayout;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -272,7 +273,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
                 break;
         }*/
         Jzvd.releaseAllVideos();
-        player.currentSpeedIndex = 1;
+        player.currentSpeedIndex = DEFAULT_SPEED_INDEX;
         player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
         player.startVideo();
     }
@@ -453,7 +454,7 @@ public class PlayerActivity extends BaseActivity implements VideoContract.View, 
 //            SniffingUtil.get().activity(this).referer(iframeUrl).callback(this).url(iframeUrl).start();
             url = iframeUrl;
             Jzvd.releaseAllVideos();
-            player.currentSpeedIndex = 1;
+            player.currentSpeedIndex = DEFAULT_SPEED_INDEX;
             player.setUp(url, witchTitle, Jzvd.SCREEN_FULLSCREEN, JZExoPlayer.class);
             player.startVideo();
         });

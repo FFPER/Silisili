@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import es.dmoral.toasty.Toasty;
@@ -150,7 +151,7 @@ public class Silisili extends Application {
         if (keySet.size() > 0) {
             for (String key : keySet) {
                 if (activityName.equals(key)) {
-                    destoryMap.get(key).finish();
+                    Objects.requireNonNull(destoryMap.get(key)).finish();
                 }
             }
         }

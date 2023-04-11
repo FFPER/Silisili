@@ -19,7 +19,9 @@ import cn.jzvd.JZUtils;
 import cn.jzvd.JzvdStd;
 import my.project.silisili.R;
 import my.project.silisili.cling.ui.DLNAActivity;
+import my.project.silisili.custom.PopupWindow;
 import my.project.silisili.util.SharedPreferencesUtils;
+import my.project.silisili.util.Utils;
 
 /**
  * 使用饺子播放器
@@ -33,7 +35,11 @@ public class JZPlayer extends JzvdStd {
     private boolean locked = false;
     public ImageView fastForward, quickRetreat, config, airplay;
     public TextView tvSpeed, snifferBtn, openDrama, preVideo, nextVideo;
-    public int currentSpeedIndex = 1;
+    private final int DEFAULT_SPEED_INDEX = 2;
+    public int currentSpeedIndex = DEFAULT_SPEED_INDEX;
+    //    速度选择弹出框
+    private PopupWindow infoPopupWindow;
+    private String[] speedArray;
 
     public JZPlayer(Context context) {
         super(context);
@@ -74,100 +80,70 @@ public class JZPlayer extends JzvdStd {
         openDrama = findViewById(R.id.open_drama_list);
         preVideo = findViewById(R.id.pre_video);
         nextVideo = findViewById(R.id.next_video);
+        // 倍速候选项
+        speedArray = Utils.getArray(R.array.speed_array);
+        // 速度选择弹框
+        infoPopupWindow = new PopupWindow(context);
+        infoPopupWindow.setAnchorView(tvSpeed);
+        infoPopupWindow.setItemData(speedArray);
+        infoPopupWindow.setModal(true);
+        infoPopupWindow.setOnSelectedListener((position, text) -> {
+            infoPopupWindow.hide();
+            currentSpeedIndex = position;
+            mediaInterface.setSpeed(Float.parseFloat(text));
+            tvSpeed.setText(context.getString(R.string.speed, text));
+        });
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
-        switch (v.getId()) {
-            case R.id.std_lock:
-                if (locked) {
-                    // 已经上锁，再次点击解锁
-                    changeUiToPlayingShow();
-                    ibLock.setImageResource(R.drawable.player_btn_locking);
-                    Toast.makeText(context, "屏幕锁定关闭", Toast.LENGTH_SHORT).show();
-                } else {
-                    // 上锁
-                    changeUiToPlayingClear();
-                    ibLock.setImageResource(R.drawable.player_btn_locking_pre);
-                    Toast.makeText(context, "屏幕锁定开启", Toast.LENGTH_SHORT).show();
-//                    Drawable up = ContextCompat.getDrawable(context,R.drawable.player_btn_locking_pre);
-//                    Drawable drawableUp= DrawableCompat.wrap(up);
-//                    DrawableCompat.setTint(drawableUp, ContextCompat.getColor(context,R.color.colorAccent));
+        int viewId = v.getId();
+        if (viewId == R.id.std_lock) {
+            if (locked) {
+                // 已经上锁，再次点击解锁
+                changeUiToPlayingShow();
+                ibLock.setImageResource(R.drawable.player_btn_locking);
+                Toast.makeText(context, "屏幕锁定关闭", Toast.LENGTH_SHORT).show();
+            } else {
+                // 上锁
+                changeUiToPlayingClear();
+                ibLock.setImageResource(R.drawable.player_btn_locking_pre);
+                Toast.makeText(context, "屏幕锁定开启", Toast.LENGTH_SHORT).show();
+///                    Drawable up = ContextCompat.getDrawable(context,R.drawable.player_btn_locking_pre);
+///                    Drawable drawableUp= DrawableCompat.wrap(up);
+///                    DrawableCompat.setTint(drawableUp, ContextCompat.getColor(context,R.color.colorAccent));
 //                    ibLock.setImageDrawable(drawableUp);
-                }
-                locked = !locked;
-                break;
-            case R.id.fast_forward:
-                //总时间长度
-                long duration = getDuration();
-                //当前时间
-                long currentPositionWhenPlaying = getCurrentPositionWhenPlaying();
-                //快进（15S）
-                long fastForwardProgress = currentPositionWhenPlaying + (Integer) SharedPreferencesUtils.getParam(context, "user_speed", 15) * 1000;
-                if (duration > fastForwardProgress) {
-                    mediaInterface.seekTo(fastForwardProgress);
-                } else {
-                    mediaInterface.seekTo(duration);
-                }
-                break;
-            case R.id.quick_retreat:
-                //当前时间
-                long quickRetreatCurrentPositionWhenPlaying = getCurrentPositionWhenPlaying();
-                //快退（15S）
-                long quickRetreatProgress = quickRetreatCurrentPositionWhenPlaying - (Integer) SharedPreferencesUtils.getParam(context, "user_speed", 15) * 1000;
-                if (quickRetreatProgress > 0) {
-                    mediaInterface.seekTo(quickRetreatProgress);
-                } else {
-                    mediaInterface.seekTo(0);
-                }
-                break;
-            case R.id.tvSpeed:
-                if (currentSpeedIndex == 7) currentSpeedIndex = 0;
-                else currentSpeedIndex += 1;
-                mediaInterface.setSpeed(getSpeedFromIndex(currentSpeedIndex));
-                tvSpeed.setText("倍数X" + getSpeedFromIndex(currentSpeedIndex));
-                break;
-            case R.id.airplay:
-                Bundle bundle = new Bundle();
-                Log.e("duration", getDuration() + "");
-                Log.e("playUrl", jzDataSource.getCurrentUrl().toString());
-                bundle.putString("playUrl", jzDataSource.getCurrentUrl().toString());
-                bundle.putLong("duration", getDuration());
-                context.startActivity(new Intent(context, DLNAActivity.class).putExtras(bundle));
-                break;
+            }
+            locked = !locked;
+        } else if (viewId == R.id.fast_forward) {
+            //总时间长度
+            long duration = getDuration();
+            //当前时间
+            long currentPositionWhenPlaying = getCurrentPositionWhenPlaying();
+            //快进（15S）
+            long fastForwardProgress = currentPositionWhenPlaying + (Integer) SharedPreferencesUtils.getParam(context, "user_speed", 15) * 1000;
+            mediaInterface.seekTo(Math.min(duration, fastForwardProgress));
+        } else if (viewId == R.id.quick_retreat) {
+            //当前时间
+            long quickRetreatCurrentPositionWhenPlaying = getCurrentPositionWhenPlaying();
+            //快退（15S）
+            long quickRetreatProgress = quickRetreatCurrentPositionWhenPlaying - (Integer) SharedPreferencesUtils.getParam(context, "user_speed", 15) * 1000;
+            if (quickRetreatProgress > 0) {
+                mediaInterface.seekTo(quickRetreatProgress);
+            } else {
+                mediaInterface.seekTo(0);
+            }
+        } else if (viewId == R.id.tvSpeed) {
+            infoPopupWindow.show();
+        } else if (viewId == R.id.airplay) {
+            Bundle bundle = new Bundle();
+            Log.e("duration", getDuration() + "");
+            Log.e("playUrl", jzDataSource.getCurrentUrl().toString());
+            bundle.putString("playUrl", jzDataSource.getCurrentUrl().toString());
+            bundle.putLong("duration", getDuration());
+            context.startActivity(new Intent(context, DLNAActivity.class).putExtras(bundle));
         }
-    }
-
-    private float getSpeedFromIndex(int index) {
-        float ret = 0f;
-        switch (index) {
-            case 0:
-                ret = 0.5f;
-                break;
-            case 1:
-                ret = 1.0f;
-                break;
-            case 2:
-                ret = 1.25f;
-                break;
-            case 3:
-                ret = 1.5f;
-                break;
-            case 4:
-                ret = 1.75f;
-                break;
-            case 5:
-                ret = 2.0f;
-                break;
-            case 6:
-                ret = 2.5f;
-                break;
-            case 7:
-                ret = 3.0f;
-                break;
-        }
-        return ret;
     }
 
     //这里是播放的时候点击屏幕出现的UI
@@ -201,11 +177,10 @@ public class JZPlayer extends JzvdStd {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         touchListener.touch();
-        switch (event.getAction()) {
-            // 用户滑动屏幕的操作，返回true来屏蔽音量、亮度、进度的滑动功能
-            case MotionEvent.ACTION_MOVE:
-                if (locked)
-                    return true;
+        // 用户滑动屏幕的操作，返回true来屏蔽音量、亮度、进度的滑动功能
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (locked)
+                return true;
         }
         return super.onTouch(v, event);
     }
@@ -289,7 +264,7 @@ public class JZPlayer extends JzvdStd {
     public void setScreenFullscreen() {
         super.setScreenFullscreen();
         fullscreenButton.setImageResource(R.drawable.baseline_view_selections_white_48dp);
-        tvSpeed.setText("倍数X" + getSpeedFromIndex(currentSpeedIndex));
+        tvSpeed.setText(context.getString(R.string.speed, speedArray[currentSpeedIndex]));
     }
 
     public interface CompleteListener {
@@ -302,6 +277,7 @@ public class JZPlayer extends JzvdStd {
 
     public interface ShowOrHideChangeViewListener {
         void showOrHideChangeView();
+
     }
 
     @Override

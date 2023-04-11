@@ -1,6 +1,7 @@
 package my.project.silisili.main.start;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -11,13 +12,17 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import my.project.silisili.R;
 import my.project.silisili.api.Api;
+import my.project.silisili.application.Silisili;
+import my.project.silisili.bean.AnimeDescDetailsBean;
 import my.project.silisili.main.base.BaseActivity;
 import my.project.silisili.main.base.Presenter;
 import my.project.silisili.main.home.HomeActivity;
+import my.project.silisili.main.player.PlayerActivity;
 import my.project.silisili.net.HttpGet;
 import my.project.silisili.util.SharedPreferencesUtils;
 import my.project.silisili.util.StatusBarUtil;
@@ -116,7 +121,30 @@ public class StartActivity extends BaseActivity {
     }
 
     private void openMain() {
-        startActivity(new Intent(StartActivity.this, HomeActivity.class));
+        boolean isTest = true;
+        if (isTest) {
+            openPlayer();
+        } else {
+            startActivity(new Intent(StartActivity.this, HomeActivity.class));
+        }
         StartActivity.this.finish();
+    }
+
+    private void openPlayer() {
+        Bundle bundle = new Bundle();
+        bundle.putString("title", "[中国新闻]美军介入俄乌冲突秘密文件疑似外泄");
+        bundle.putString("url", "https://hls.cntv.kcdnvip.com/asp/hls/main/0303000a/3/default/220780213e47453bb0ec137950d559e2/main.m3u8");
+        bundle.putString("animeTitle", "animeTitle");
+        bundle.putString("sili", "美军俄乌冲突秘密文件");
+        bundle.putParcelableArrayList("list", new ArrayList<AnimeDescDetailsBean>() {{
+            add(new AnimeDescDetailsBean("[中国新闻]美军介入俄乌冲突秘密文件疑似外泄",
+                    "https://hls.cntv.kcdnvip.com/asp/hls/main/0303000a/3/default/220780213e47453bb0ec137950d559e2/main.m3u8",
+                    false));
+        }});
+        bundle.putInt("clickIndex", 0);
+        Silisili.destoryActivity("player");
+        Intent intent = new Intent(StartActivity.this, PlayerActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
     }
 }

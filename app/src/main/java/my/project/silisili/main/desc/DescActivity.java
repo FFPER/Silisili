@@ -190,7 +190,7 @@ public class DescActivity extends BaseActivity<DescContract.View, DescPresenter>
         //设置下拉框的宽度 为屏幕宽度
         sourceSpinner.setDropDownWidth(Utils.screenWidth(this));
         spinnerAdapter = new ArrayAdapter<>(this, R.layout.item_spinner_source);
-        spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_source);
+        //spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_source);
         sourceSpinner.setAdapter(spinnerAdapter);
         sourceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
