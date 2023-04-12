@@ -222,9 +222,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            android:gravity="center_vertical"
                             android:drawableEnd="@android:drawable/ic_media_play"
-                            android:drawablePadding="5dp"
+                            android:drawablePadding="8dp"
+                            android:gravity="center_vertical"
                             android:text="@string/select_source"
                             android:textColor="@color/white"
                             android:textSize="16sp"
@@ -233,10 +233,9 @@
                         <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/selected_resource"
                             style="@style/common_spinner"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:popupTheme="@style/common_spinner"
+
                             android:spinnerMode="dropdown" />
                     </LinearLayout>
                     <!--选集-->

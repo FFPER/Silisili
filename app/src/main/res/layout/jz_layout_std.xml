@@ -115,10 +115,9 @@
 
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/spinnerSpeed"
-            style="@style/common_spinner"
-            android:layout_height="wrap_content"
-            android:dropDownWidth="65dp"
-            android:popupTheme="@style/common_spinner"
+            style="@style/common_spinner2"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:spinnerMode="dropdown"
             android:textAlignment="center"
             android:textColor="#ffffff" />

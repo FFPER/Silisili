@@ -86,7 +86,8 @@ public class JZPlayer extends JzvdStd {
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(context, R.layout.item_spinner_source, speedArray);
         spinnerSpeed.setAdapter(spinnerAdapter);
         //设置下拉框的宽度 为屏幕宽度
-//        spinnerSpeed.setDropDownWidth(Utils.screenWidth(context));
+        spinnerSpeed.setDropDownWidth(Utils.screenWidth(context) / 4);
+        spinnerSpeed.getPopupBackground().setAlpha((int) (255 * 0.7));
         spinnerSpeed.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
