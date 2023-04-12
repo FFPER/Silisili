@@ -7,8 +7,8 @@ android {
         minSdkVersion 21
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 30
-        versionCode 17
-        versionName "1.0-beta17"
+        versionCode 18
+        versionName "1.0-beta18"
         ndk { abiFilters "armeabi", "armeabi-v7a", "armeabi-v8a" }//, "x86" }
         resConfigs 'zh'
     }
