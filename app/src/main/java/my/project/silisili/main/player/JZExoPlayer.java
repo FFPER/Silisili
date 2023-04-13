@@ -1,13 +1,5 @@
 package my.project.silisili.main.player;
 
-import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SEEK;
-import static com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
-import static com.google.android.exoplayer2.Player.REPEAT_MODE_ONE;
-import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
-import static com.google.android.exoplayer2.Player.STATE_ENDED;
-import static com.google.android.exoplayer2.Player.STATE_IDLE;
-import static com.google.android.exoplayer2.Player.STATE_READY;
-
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.net.Uri;
@@ -19,32 +11,32 @@ import android.view.Surface;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.PlaybackException;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.RenderersFactory;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.ExoTrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultAllocator;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSource;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
-import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoSize;
+import androidx.media3.common.C;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.PlaybackException;
+import androidx.media3.common.PlaybackParameters;
+import androidx.media3.common.Player;
+import androidx.media3.common.Timeline;
+import androidx.media3.common.VideoSize;
+import androidx.media3.common.util.Util;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DefaultDataSource;
+import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.exoplayer.DefaultLoadControl;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
+import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.LoadControl;
+import androidx.media3.exoplayer.RenderersFactory;
+import androidx.media3.exoplayer.hls.HlsMediaSource;
+import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.ExoTrackSelection;
+import androidx.media3.exoplayer.trackselection.TrackSelector;
+import androidx.media3.exoplayer.upstream.BandwidthMeter;
+import androidx.media3.exoplayer.upstream.DefaultAllocator;
+import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 
 import cn.jzvd.JZMediaInterface;
 import cn.jzvd.Jzvd;
@@ -69,6 +61,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.Listener {
     }
 
     @Override
+    @androidx.media3.common.util.UnstableApi
     public void prepare() {
         Log.e(TAG, "prepare");
         Context context = jzvd.getContext();
@@ -126,9 +119,9 @@ public class JZExoPlayer extends JZMediaInterface implements Player.Listener {
             exoPlayer.addListener(this);
             boolean isLoop = jzvd.jzDataSource.looping;
             if (isLoop) {
-                exoPlayer.setRepeatMode(REPEAT_MODE_ONE);
+                exoPlayer.setRepeatMode(Player.REPEAT_MODE_ONE);
             } else {
-                exoPlayer.setRepeatMode(REPEAT_MODE_OFF);
+                exoPlayer.setRepeatMode(Player.REPEAT_MODE_OFF);
             }
 
             exoPlayer.setMediaSource(videoSource);
@@ -260,19 +253,19 @@ public class JZExoPlayer extends JZMediaInterface implements Player.Listener {
         Log.e(TAG, "onPlaybackStateChanged：=" + playbackState);
         handler.post(() -> {
             switch (playbackState) {
-                case STATE_IDLE: {
+                case Player.STATE_IDLE: {
                 }
                 break;
-                case STATE_BUFFERING: {
+                case Player.STATE_BUFFERING: {
                     jzvd.onStatePreparingPlaying();
                     handler.post(callback);
                 }
                 break;
-                case STATE_READY: {
+                case Player.STATE_READY: {
                     jzvd.onStatePlaying();
                 }
                 break;
-                case STATE_ENDED: {
+                case Player.STATE_ENDED: {
                     jzvd.onCompletion();
                 }
                 break;
@@ -297,7 +290,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.Listener {
     @Override
     public void onPositionDiscontinuity(@NonNull Player.PositionInfo oldPosition, @NonNull Player.PositionInfo newPosition, int reason) {
         Player.Listener.super.onPositionDiscontinuity(oldPosition, newPosition, reason);
-        if (reason == DISCONTINUITY_REASON_SEEK) {
+        if (reason == Player.DISCONTINUITY_REASON_SEEK) {
             handler.post(() -> jzvd.onSeekComplete());
         }
     }
@@ -312,6 +305,7 @@ public class JZExoPlayer extends JZMediaInterface implements Player.Listener {
     }
 
     @Override
+    @androidx.media3.common.util.UnstableApi
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         if (SAVED_SURFACE == null) {
             SAVED_SURFACE = surface;
