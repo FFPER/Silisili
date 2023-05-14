@@ -33,7 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 
 import butterknife.BindView;
@@ -77,7 +77,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     private SearchView mSearchView;
     private MenuItem query;
     private SearchView.SearchAutoComplete queryTextView;
-    private String[] tabs =  Utils.getArray(R.array.week_array);
+    private String[] tabs = Utils.getArray(R.array.week_array);
     private long exitTime = 0;
     private boolean isChangingTheme = false;
     private int[][] states = new int[][]{
@@ -110,7 +110,8 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     }
 
     @Override
-    protected void initBeforeView() {}
+    protected void initBeforeView() {
+    }
 
     public void initToolbar() {
         toolbar.setTitle(getResources().getString(R.string.app_name));
@@ -123,8 +124,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             StatusBarUtil.setColorForDrawerLayout(this, drawer, getColor(R.color.colorPrimary), 0);
             if (!isDarkTheme)
                 this.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        }
-        else
+        } else
             StatusBarUtil.setColorForDrawerLayout(this, drawer, getResources().getColor(R.color.colorPrimaryDark), 0);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -157,7 +157,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     }
 
     public void initFragment() {
-        week = Utils.getWeekOfDate(new Date());
+        week = Utils.getWeekOfDate(Calendar.getInstance().getTime());
         for (String title : tabs) {
             tab.addTab(tab.newTab());
         }
@@ -266,7 +266,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 0x10 && resultCode== 0x20) {
+        if (requestCode == 0x10 && resultCode == 0x20) {
             viewpager.removeAllViews();
             removeFragmentTransaction();
             mPresenter.loadData(true);
@@ -346,7 +346,7 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
     public void removeFragmentTransaction() {
         try {//避免重启太快恢复
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            for (int i = 0; i < 7 ; i++) {
+            for (int i = 0; i < 7; i++) {
                 fragmentTransaction.remove(adapter.getItem(i));
             }
             fragmentTransaction.commitAllowingStateLoss();
@@ -393,8 +393,10 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             RippleAnimation.create(themeView).setDuration(1000).start();
             setHeaderImg();
             if (gtSdk23()) {
-                if (isDarkTheme) getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                else getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                if (isDarkTheme)
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                else
+                    getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
             }
             /** 设置DrawerLayout相关颜色 **/
             navigationView.setBackgroundColor(isDarkTheme ? getResources().getColor(R.color.dark_navigation_color) : getResources().getColor(R.color.light_navigation_color));
@@ -412,18 +414,20 @@ public class HomeActivity extends BaseActivity<HomeContract.View, HomePresenter>
             ImageView searchIcon2 = mSearchView.findViewById(androidx.appcompat.R.id.search_close_btn);
             searchIcon2.setColorFilter(isDarkTheme ? getResources().getColor(R.color.light_toolbar_color) : getResources().getColor(R.color.dark_toolbar_color));
             /** 设置TabLayout相关颜色 **/
-            int[] colors = new int[]{isDarkTheme ? getResources().getColor(R.color.light_toolbar_color) :getResources().getColor(R.color.dark_toolbar_color) ,
+            int[] colors = new int[]{isDarkTheme ? getResources().getColor(R.color.light_toolbar_color) : getResources().getColor(R.color.dark_toolbar_color),
                     getResources().getColor(R.color.tabSelectedTextColor)
             };
             tab.setTabTextColors(new ColorStateList(states, colors));
-            tab.setTabTextColors(isDarkTheme ? getResources().getColor(R.color.light_toolbar_color) :getResources().getColor(R.color.dark_toolbar_color), getResources().getColor(R.color.tabSelectedTextColor));
+            tab.setTabTextColors(isDarkTheme ? getResources().getColor(R.color.light_toolbar_color) : getResources().getColor(R.color.dark_toolbar_color), getResources().getColor(R.color.tabSelectedTextColor));
             tab.setBackgroundColor(isDarkTheme ? getResources().getColor(R.color.dark_navigation_color) : getResources().getColor(R.color.light_navigation_color));
             /** 设置searchView相关颜色 **/
             queryTextView.setTextColor(isDarkTheme ? getResources().getColor(R.color.light_toolbar_color) : getResources().getColor(R.color.dark_toolbar_color));
             queryTextView.setHintTextColor(isDarkTheme ? getResources().getColor(R.color.light_toolbar_color) : getResources().getColor(R.color.dark_toolbar_color));
             emptyView.setBackgroundColor(isDarkTheme ? getResources().getColor(R.color.dark_window_color) : getResources().getColor(R.color.light_window_color));
-            if (gtSdk23()) StatusBarUtil.setColorForDrawerLayout(this, drawer, isDarkTheme ? getResources().getColor(R.color.dark_toolbar_color) : getResources().getColor(R.color.light_toolbar_color), 0);
-            else StatusBarUtil.setColorForDrawerLayout(this, drawer, isDarkTheme ? getResources().getColor(R.color.dark_toolbar_color) : getResources().getColor(R.color.light_toolbar_color_lt23), 0);
+            if (gtSdk23())
+                StatusBarUtil.setColorForDrawerLayout(this, drawer, isDarkTheme ? getResources().getColor(R.color.dark_toolbar_color) : getResources().getColor(R.color.light_toolbar_color), 0);
+            else
+                StatusBarUtil.setColorForDrawerLayout(this, drawer, isDarkTheme ? getResources().getColor(R.color.dark_toolbar_color) : getResources().getColor(R.color.light_toolbar_color_lt23), 0);
             removeFragmentTransaction();
             setWeekAdapter(week);
             isChangingTheme = false;

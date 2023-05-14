@@ -44,6 +44,7 @@ public class HomeModel implements HomeContract.Model {
                 try {
                     LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                     JSONObject weekObj = new JSONObject();
+                    assert response.body() != null;
                     Document body = Jsoup.parse(response.body().string());
 //                        map.put("url", body.select("ul.nav_lef > li").get(1).select("a").get(0).attr("href"));
 //                        map.put("title",  body.select("ul.nav_lef > li").get(1).select("a").get(0).text());
@@ -61,16 +62,27 @@ public class HomeModel implements HomeContract.Model {
                     map.put("title", title);
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
                     String date = sdf.format(Calendar.getInstance().getTime());
-
+                    int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);//当前日期 周日1 ... 周六7
+                    // 周日起始转为周一起始
+                    if (day == 1) {
+                        day = 8;
+                    }
                     // 不需要最近更新tab  setDataToJson(TABS[7], date, body.select("div#mytabweek > li").get(0).select("ul.tab-content > li"), weekObj);
-                    Elements weekLiEls = body.select("div.tab-item > li");// 饭局时间表的父容器
-                    setDataToJson(TABS[0], date, weekLiEls.get(1).select("ul.tab-content > li"), weekObj);
-                    setDataToJson(TABS[1], date, weekLiEls.get(2).select("ul.tab-content > li"), weekObj);
-                    setDataToJson(TABS[2], date, weekLiEls.get(3).select("ul.tab-content > li"), weekObj);
-                    setDataToJson(TABS[3], date, weekLiEls.get(4).select("ul.tab-content > li"), weekObj);
-                    setDataToJson(TABS[4], date, weekLiEls.get(5).select("ul.tab-content > li"), weekObj);
-                    setDataToJson(TABS[5], date, weekLiEls.get(6).select("ul.tab-content > li"), weekObj);
-                    setDataToJson(TABS[6], date, weekLiEls.get(7).select("ul.tab-content > li"), weekObj);
+                    Elements weekLiEls = body.select("div.tab-item > li");// 番剧时间表的父容器
+                    setDataToJson(TABS[day - 2], date, weekLiEls.get(0).select("ul.tab-content > li"), weekObj); //今天
+                    for (int index = 0; index < TABS.length; index++) {
+//                        2->0=6-6, 3->1 = 6-5, 7->5, 1->8->0 6
+                        if (index != day - 2) {
+                            setDataToJson(TABS[index], date, weekLiEls.get(index + 1).select("ul.tab-content > li"), weekObj);
+                        }
+                    }
+//                    setDataToJson(TABS[0], date, weekLiEls.get(1).select("ul.tab-content > li"), weekObj);
+//                    setDataToJson(TABS[1], date, weekLiEls.get(2).select("ul.tab-content > li"), weekObj);
+//                    setDataToJson(TABS[2], date, weekLiEls.get(3).select("ul.tab-content > li"), weekObj);
+//                    setDataToJson(TABS[3], date, weekLiEls.get(4).select("ul.tab-content > li"), weekObj);
+//                    setDataToJson(TABS[4], date, weekLiEls.get(5).select("ul.tab-content > li"), weekObj);
+//                    setDataToJson(TABS[5], date, weekLiEls.get(6).select("ul.tab-content > li"), weekObj);
+//                    setDataToJson(TABS[6], date, weekLiEls.get(7).select("ul.tab-content > li"), weekObj);
                     map.put("week", weekObj);
                     callback.success(map);
                 } catch (Exception e) {
@@ -102,10 +114,11 @@ public class HomeModel implements HomeContract.Model {
             } else {
                 object.put("img", "");
             }
-            // TODO: 2023/5/8 排查到这里了 
-            object.put("url", els.get(i).select("a").attr("href"));
-            object.put("drama", els.get(i).select("p.num > a") == null ? "" : String.format("更新至%1$s", els.get(i).select("p.num > a").text()));
-            object.put("date", els.get(i).select("p.num").get(0).childNode(1).toString());
+            // 番剧信息
+            Elements elements = els.get(i).select("div.item-info");
+            object.put("url", elements.select("a").attr("href"));
+            object.put("drama", String.format("更新至%s", elements.select("p.num > a").text()));
+            object.put("date", elements.select("p.num").get(0).childNode(0).toString());
             object.put("new", date.equals(object.getString("date")));
             arr.put(object);
         }
