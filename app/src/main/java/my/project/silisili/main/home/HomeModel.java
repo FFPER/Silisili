@@ -1,6 +1,7 @@
 package my.project.silisili.main.home;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -17,6 +18,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,16 +47,7 @@ public class HomeModel implements HomeContract.Model {
                     LinkedHashMap<String, Object> map = new LinkedHashMap<>();
                     JSONObject weekObj = new JSONObject();
                     assert response.body() != null;
-                    Document body = Jsoup.parse(response.body().string());
-//                        map.put("url", body.select("ul.nav_lef > li").get(1).select("a").get(0).attr("href"));
-//                        map.put("title",  body.select("ul.nav_lef > li").get(1).select("a").get(0).text());
-//                        setDataToJson(TABS[0], body.select("div.xfswiper0 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-//                        setDataToJson(TABS[1], body.select("div.xfswiper1 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-//                        setDataToJson(TABS[2], body.select("div.xfswiper2 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-//                        setDataToJson(TABS[3], body.select("div.xfswiper3 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-//                        setDataToJson(TABS[4], body.select("div.xfswiper4 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-//                        setDataToJson(TABS[5], body.select("div.xfswiper5 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
-//                        setDataToJson(TABS[6], body.select("div.xfswiper6 >div.swiper-wrapper >div.swiper-slide >ul.clear > li"), weekObj);
+                    Document body = Jsoup.parse(Objects.requireNonNull(response.body()).string());
                     // 2022/12/10 这里对应的侧滑菜单的第一项，需要先整一个标签放上就行，放上专题的第一个吧  AnimeListModel.java
                     Element titleEle = body.select("div.row.wall > article:first-child").get(0);
                     String title = titleEle.select("div.entry-meta").get(0).childNode(0).toString().replaceAll("\n", "");
@@ -63,26 +56,16 @@ public class HomeModel implements HomeContract.Model {
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("MM-dd");
                     String date = sdf.format(Calendar.getInstance().getTime());
                     int day = Calendar.getInstance().get(Calendar.DAY_OF_WEEK);//当前日期 周日1 ... 周六7
-                    // 周日起始转为周一起始
-                    if (day == 1) {
-                        day = 8;
-                    }
                     // 不需要最近更新tab  setDataToJson(TABS[7], date, body.select("div#mytabweek > li").get(0).select("ul.tab-content > li"), weekObj);
                     Elements weekLiEls = body.select("div.tab-item > li");// 番剧时间表的父容器
-                    setDataToJson(TABS[day - 2], date, weekLiEls.get(0).select("ul.tab-content > li"), weekObj); //今天
                     for (int index = 0; index < TABS.length; index++) {
-//                        2->0=6-6, 3->1 = 6-5, 7->5, 1->8->0 6
-                        if (index != day - 2) {
+                        if (index != TABS.length - 1) {
                             setDataToJson(TABS[index], date, weekLiEls.get(index + 1).select("ul.tab-content > li"), weekObj);
+                            Log.e("index", "index=" + index);
+                        } else {
+                            setDataToJson(TABS[TABS.length - 1], date, weekLiEls.get(0).select("ul.tab-content > li"), weekObj);
                         }
                     }
-//                    setDataToJson(TABS[0], date, weekLiEls.get(1).select("ul.tab-content > li"), weekObj);
-//                    setDataToJson(TABS[1], date, weekLiEls.get(2).select("ul.tab-content > li"), weekObj);
-//                    setDataToJson(TABS[2], date, weekLiEls.get(3).select("ul.tab-content > li"), weekObj);
-//                    setDataToJson(TABS[3], date, weekLiEls.get(4).select("ul.tab-content > li"), weekObj);
-//                    setDataToJson(TABS[4], date, weekLiEls.get(5).select("ul.tab-content > li"), weekObj);
-//                    setDataToJson(TABS[5], date, weekLiEls.get(6).select("ul.tab-content > li"), weekObj);
-//                    setDataToJson(TABS[6], date, weekLiEls.get(7).select("ul.tab-content > li"), weekObj);
                     map.put("week", weekObj);
                     callback.success(map);
                 } catch (Exception e) {
